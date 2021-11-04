@@ -1,0 +1,225 @@
+import ProductItem from "components/ProductItem";
+import { useState } from "react";
+import { AppsOutline, ChevronBack, ChevronForward, MenuOutline } from "react-ionicons";
+const ButtonView = ({ ICON, active, onClick }) => (
+	<button
+		onClick={onClick}
+		className={`w-[58px] flex items-center justify-center ${
+			active ? "bg-grayf1 text-blue33 dark:bg-black1f" : "text-grayc1"
+		}`}
+	>
+		<ICON color={"#00000"} height="20px" width="20px" />
+	</button>
+);
+const PaginationButton = ({ title, active }) => (
+	<button className={`flex items-center justify-center w-14 text-lg ${active && " text-white bg-blue33"}`}>
+		{title}
+	</button>
+);
+const BoxFilter = ({ title, options, className = "" }) => (
+	<ul className={`dark:bg-gray24 p-5 bg-grayf6 rounded-md ${className}`}>
+		<li className="text-[#22262A] leading-[27px] mb-4 dark:text-whitee2 text-lg font-medium uppercase">
+			{title}
+		</li>
+		{options.map((e, i) => (
+			<li
+				key={i}
+				className="text-[#262626] leading-[22px] flex justify-between py-2 dark:text-whitee2 text-lg"
+			>
+				<button>{e.label}</button>
+				<p className="text-[#acaeb0]">{e.amount}</p>
+			</li>
+		))}
+	</ul>
+);
+const BoxFilterRight = ({ title, options }) => (
+	<div className="sm:w-1/2">
+		<label htmlFor="sort" className="mr-2 dark:text-whitee2 sm:mb-2">
+			{title}
+		</label>
+		<select
+			name="sort"
+			id="sort"
+			className="border-[#F1F3F4] px-4 h-10 dark:text-whitee2 dark:bg-black1f border-0 rounded-sm outline-none sm:px-2 sm:w-full"
+		>
+			{options.map((e, i) => (
+				<option key={i} value={e.value}>
+					{e.label}
+				</option>
+			))}
+		</select>
+	</div>
+);
+
+const Filter = () => {
+	const [viewOption, setViewOption] = useState(1);
+	const optionProductType = [
+		{
+			label: "Bag",
+			amount: 12,
+		},
+		{
+			label: "Bag",
+			amount: 12,
+		},
+		{
+			label: "Bag",
+			amount: 12,
+		},
+	];
+	const optionFilterSort = [
+		{
+			label: "Name (A-Z)",
+			value: 1,
+		},
+		{
+			label: "Name (Z-A)",
+			value: 2,
+		},
+		{
+			label: "Price ⬆",
+			value: 3,
+		},
+		{
+			label: "Price ⬇",
+			value: 4,
+		},
+	];
+	const optionFilterRating = [
+		{
+			label: "All",
+			value: 0,
+		},
+		{
+			label: "1 ⭐",
+			value: 1,
+		},
+		{
+			label: "2 ⭐",
+			value: 2,
+		},
+		{
+			label: "3 ⭐",
+			value: 3,
+		},
+		{
+			label: "4 ⭐",
+			value: 4,
+		},
+		{
+			label: "5 ⭐",
+			value: 5,
+		},
+	];
+	return (
+		<section>
+			<div className="max-w-[1300px] gap-x-[30px] flex mb-16 mx-auto md:mb-8 lg:flex-col lg:gap-y-5">
+				{/* Left */}
+				<div className="max-w-[270px] gap-y-[30px] flex flex-col w-full md:hidden lg:flex-row lg:gap-x-3 lg:max-w-none">
+					<BoxFilter title="Product Type" options={optionProductType} className="lg:w-1/3" />
+					<div className="bg-[#f6f7f8] dark:bg-gray24 p-5 rounded-md lg:w-1/3">
+						<p className="text-[#22262A] leading-[27px] mb-5 dark:text-whitee2 text-lg font-medium uppercase">
+							Color
+						</p>
+						<div className="grid grid-cols-6">
+							<button className="bg-[#006CFF] mx-auto w-5 h-5 rounded-full"></button>
+							<button className="bg-[#FC3E39] mx-auto w-5 h-5 rounded-full"></button>
+							<button className="bg-[#171717] mx-auto w-5 h-5 rounded-full"></button>
+							<button className="bg-[#FFF600] mx-auto w-5 h-5 rounded-full"></button>
+							<button className="bg-[#FF00B4] mx-auto w-5 h-5 rounded-full"></button>
+							<button className="bg-[#EFDFDF] mx-auto w-5 h-5 rounded-full"></button>
+						</div>
+					</div>
+					<ul className="dark:bg-gray24 p-5 bg-grayf6 rounded-md lg:w-1/3">
+						<li className="text-[#22262A] leading-[27px] mb-[25px] dark:text-whitee2 text-lg font-medium uppercase">
+							Brand
+						</li>
+						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
+							<button>Bag</button>
+							<p className="text-[#acaeb0]">12</p>
+						</li>
+						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
+							<button>Nike</button>
+							<p className="text-[#acaeb0]">12</p>
+						</li>
+						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
+							<button>BELT</button>
+							<p className="text-[#acaeb0]">12</p>
+						</li>
+					</ul>
+				</div>
+				{/* Right */}
+				<div className="flex-grow">
+					{/* Filter */}
+					<div className="dark:bg-gray24 flex items-stretch justify-between mb-6 bg-grayf6 rounded-md sm:flex-col">
+						<div className="flex gap-x-10 px-5 py-2 h-full sm:gap-x-2 sm:justify-between">
+							<BoxFilterRight title="Sort By" options={optionFilterSort} />
+							<BoxFilterRight title="Rating" options={optionFilterRating} />
+						</div>
+						<div className="h-[56px] flex justify-center">
+							<ButtonView
+								ICON={AppsOutline}
+								active={viewOption === 1}
+								onClick={() => setViewOption(1)}
+							/>
+							<ButtonView
+								ICON={MenuOutline}
+								active={viewOption === 2}
+								onClick={() => setViewOption(2)}
+							/>
+						</div>
+					</div>
+					{/* Grid view */}
+					{viewOption === 1 ? (
+						<div className="gap-[33px] md:gap-[15px] grid grid-cols-3 mb-6 md:grid-cols-2">
+							<ProductItem hot />
+							<ProductItem hot />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+							<ProductItem />
+						</div>
+					) : (
+						<div className="gap-[30px] grid grid-cols-1 mb-6">
+							<ProductItem hot detail />
+							<ProductItem hot detail />
+							<ProductItem hot detail />
+							<ProductItem hot detail />
+							<ProductItem hot detail />
+							<ProductItem detail />
+							<ProductItem detail />
+							<ProductItem detail />
+							<ProductItem detail />
+							<ProductItem detail />
+							<ProductItem detail />
+							<ProductItem detail />
+						</div>
+					)}
+
+					{/* Pagination */}
+					<div className="dark:bg-gray24 flex items-stretch justify-center h-14 dark:text-whitee2 bg-grayf6">
+						<button className="flex items-center justify-center w-14 text-lg">
+							<ChevronBack color={"#00000"} />
+						</button>
+						<PaginationButton title="1" active />
+						<PaginationButton title="2" />
+						<PaginationButton title="3" />
+						<PaginationButton title="4" />
+						<PaginationButton title="5" />
+						<button className="flex items-center justify-center w-14 text-lg">
+							<ChevronForward color={"#00000"} />
+						</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+};
+
+export default Filter;

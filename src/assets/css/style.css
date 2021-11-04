@@ -1,0 +1,8 @@
+.toggleDarkmode:checked ~ label::before {
+	transform: translateX(28px);
+	background: #121212;
+}
+.toggleDarkmode:checked ~ label {
+	/* background: white; */
+	border-color: #121212;
+}
