@@ -1,5 +1,4 @@
 import product from "assets/images/product.png";
-import calc from "postcss-calc";
 import { CartOutline, HeartOutline } from "react-ionicons";
 import StarRating from "./StarRating";
 const ProductItem = ({ detail, link = "/", hot = false }) => {
