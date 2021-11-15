@@ -3,6 +3,7 @@ import Footer from "components/Footer";
 import ToggleMode from "components/ToggleMode";
 import { MenuContextProvider } from "contexts/MenuContext";
 import MobileMenu from "components/MobileMenu";
+import { CartContextProvider } from "contexts/CartContext";
 
 const PublicLayout = ({ children }) => {
 	return (
@@ -12,7 +13,7 @@ const PublicLayout = ({ children }) => {
 				<MobileMenu />
 				<Header />
 			</MenuContextProvider>
-			{children}
+			<CartContextProvider>{children}</CartContextProvider>
 			<Footer />
 		</>
 	);

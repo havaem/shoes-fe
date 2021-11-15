@@ -1,6 +1,8 @@
 import ProductItem from "components/ProductItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppsOutline, ChevronBack, ChevronForward, MenuOutline } from "react-ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProduct } from "reducers/asyncThunk/productAsyncThunk";
 const ButtonView = ({ ICON, active, onClick }) => (
 	<button
 		onClick={onClick}
@@ -50,10 +52,10 @@ const BoxFilterRight = ({ title, options }) => (
 		</select>
 	</div>
 );
-
 const Filter = () => {
+	const dispatch = useDispatch();
 	const [viewOption, setViewOption] = useState(1);
-	const optionProductType = [
+	const optionProductBrand = [
 		{
 			label: "Bag",
 			amount: 12,
@@ -111,13 +113,18 @@ const Filter = () => {
 			value: 5,
 		},
 	];
+	const products = useSelector((state) => state.product.products);
+	const userWhiteList = useSelector((state) => state.user.user.whitelist);
+	useEffect(() => {
+		dispatch(getAllProduct());
+	}, [dispatch]);
 	return (
 		<section>
 			<div className="max-w-[1300px] gap-x-[30px] flex mb-16 mx-auto md:mb-8 lg:flex-col lg:gap-y-5">
 				{/* Left */}
 				<div className="max-w-[270px] gap-y-[30px] flex flex-col w-full md:hidden lg:flex-row lg:gap-x-3 lg:max-w-none">
-					<BoxFilter title="Product Type" options={optionProductType} className="lg:w-1/3" />
-					<div className="bg-[#f6f7f8] dark:bg-gray24 p-5 rounded-md lg:w-1/3">
+					<BoxFilter title="Brand" options={optionProductBrand} className="lg:w-1/3" />
+					<div className="bg-[#f6f7f8] p-5 dark:bg-gray24 rounded-md lg:w-1/3">
 						<p className="text-[#22262A] leading-[27px] mb-5 dark:text-whitee2 text-lg font-medium uppercase">
 							Color
 						</p>
@@ -130,28 +137,11 @@ const Filter = () => {
 							<button className="bg-[#EFDFDF] mx-auto w-5 h-5 rounded-full"></button>
 						</div>
 					</div>
-					<ul className="dark:bg-gray24 p-5 bg-grayf6 rounded-md lg:w-1/3">
-						<li className="text-[#22262A] leading-[27px] mb-[25px] dark:text-whitee2 text-lg font-medium uppercase">
-							Brand
-						</li>
-						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
-							<button>Bag</button>
-							<p className="text-[#acaeb0]">12</p>
-						</li>
-						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
-							<button>Nike</button>
-							<p className="text-[#acaeb0]">12</p>
-						</li>
-						<li className="text-[#262626] leading-[22px] flex justify-between mb-5 dark:text-whitee2 text-lg">
-							<button>BELT</button>
-							<p className="text-[#acaeb0]">12</p>
-						</li>
-					</ul>
 				</div>
 				{/* Right */}
 				<div className="flex-grow">
 					{/* Filter */}
-					<div className="dark:bg-gray24 flex items-stretch justify-between mb-6 bg-grayf6 rounded-md sm:flex-col">
+					<div className="flex items-stretch justify-between mb-6 dark:bg-gray24 bg-grayf6 rounded-md sm:flex-col">
 						<div className="flex gap-x-10 px-5 py-2 h-full sm:gap-x-2 sm:justify-between">
 							<BoxFilterRight title="Sort By" options={optionFilterSort} />
 							<BoxFilterRight title="Rating" options={optionFilterRating} />
@@ -170,40 +160,31 @@ const Filter = () => {
 						</div>
 					</div>
 					{/* Grid view */}
-					{viewOption === 1 ? (
-						<div className="gap-[33px] md:gap-[15px] grid grid-cols-3 mb-6 md:grid-cols-2">
-							<ProductItem hot />
-							<ProductItem hot />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-							<ProductItem />
-						</div>
-					) : (
-						<div className="gap-[30px] grid grid-cols-1 mb-6">
-							<ProductItem hot detail />
-							<ProductItem hot detail />
-							<ProductItem hot detail />
-							<ProductItem hot detail />
-							<ProductItem hot detail />
-							<ProductItem detail />
-							<ProductItem detail />
-							<ProductItem detail />
-							<ProductItem detail />
-							<ProductItem detail />
-							<ProductItem detail />
-							<ProductItem detail />
-						</div>
-					)}
+					<div
+						className={`${
+							viewOption === 1
+								? "gap-[33px] md:gap-[15px] grid grid-cols-3 mb-6 sm:grid-cols-1 xl:grid-cols-2"
+								: "gap-[30px] grid grid-cols-1 mb-6"
+						}`}
+					>
+						{products &&
+							products.map((e, i) => (
+								<ProductItem
+									whitelist={userWhiteList.indexOf(e._id) !== -1}
+									id={e._id}
+									detail={viewOption === 1 ? false : true}
+									key={i}
+									name={e.name}
+									image={e.image[0]}
+									description={e.description}
+									rating={e.rating.averageRating}
+									reviews={e.rating.ratingByTimes.length}
+								/>
+							))}
+					</div>
 
 					{/* Pagination */}
-					<div className="dark:bg-gray24 flex items-stretch justify-center h-14 dark:text-whitee2 bg-grayf6">
+					<div className="flex items-stretch justify-center h-14 dark:text-whitee2 dark:bg-gray24 bg-grayf6">
 						<button className="flex items-center justify-center w-14 text-lg">
 							<ChevronBack color={"#00000"} />
 						</button>

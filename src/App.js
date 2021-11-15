@@ -1,21 +1,41 @@
 import Loading from "components/Loading";
+import Toast from "components/Toast";
 import PublicLayout from "layouts/PublicLayout";
-import { Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { currentUser } from "reducers/asyncThunk/userAsyncThunk";
+import { errorNoti } from "reducers/notiReducer";
 import { routes } from "routes/route";
+import { renderRoute } from "utils";
 
 function App() {
-	const renderRoute = (routes) =>
-		routes.map((ele) => (
-			<Route key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />
-		));
-
+	const dispatch = useDispatch();
+	const [canRender, setCanRender] = useState(false);
+	useEffect(() => {
+		const getCurrentUser = async () => {
+			try {
+				const token = localStorage.getItem("token");
+				if (token) {
+					await dispatch(currentUser(token)).unwrap();
+				}
+				setCanRender(true);
+			} catch (error) {
+				dispatch(errorNoti({ message: error.message }));
+				localStorage.removeItem("token");
+			}
+		};
+		getCurrentUser();
+	}, [dispatch]);
 	return (
 		<>
 			<Router>
 				<Suspense fallback={<Loading />}>
 					<Switch>
-						<PublicLayout>{renderRoute(routes)}</PublicLayout>
+						<PublicLayout>
+							<Toast />
+							{canRender && renderRoute(routes)}
+						</PublicLayout>
 					</Switch>
 				</Suspense>
 			</Router>

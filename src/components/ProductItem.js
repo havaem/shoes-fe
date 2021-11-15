@@ -1,7 +1,41 @@
-import product from "assets/images/product.png";
-import { CartOutline, HeartOutline } from "react-ionicons";
+import { pathConstant } from "constant/pathConstant";
+import { useState } from "react";
+import { CartOutline, Heart, HeartOutline } from "react-ionicons";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { changeWhiteListUser } from "reducers/asyncThunk/userAsyncThunk";
+import { errorNoti, successNoti } from "reducers/notiReducer";
 import StarRating from "./StarRating";
-const ProductItem = ({ detail, link = "/", hot = false }) => {
+const ProductItem = ({
+	whitelist,
+	id,
+	name,
+	reviews,
+	rating,
+	description,
+	image,
+	detail,
+	link = "/",
+	hot = false,
+}) => {
+	const dispatch = useDispatch();
+	const renderRate = (number) => {
+		let data = [];
+		for (let i = 0; i < 5; i++) {
+			data.push(i < number ? <StarRating key={i} active /> : <StarRating key={i} />);
+		}
+		return data;
+	};
+	const [isWhiteList, setIsWhiteList] = useState(whitelist);
+	const handleChangeWhiteList = async () => {
+		try {
+			const response = await dispatch(changeWhiteListUser({ id: id })).unwrap();
+			setIsWhiteList(!isWhiteList);
+			dispatch(successNoti({ message: response.message, delay: 1500 }));
+		} catch (error) {
+			dispatch(errorNoti({ message: error.message, delay: 1500 }));
+		}
+	};
 	return (
 		<div
 			className={`group relative rounded-md dark:bg-gray24  ${
@@ -10,7 +44,7 @@ const ProductItem = ({ detail, link = "/", hot = false }) => {
 		>
 			<div
 				className={`xl:max-h-full ${
-					detail ? "w-[250px] h-[250px] sm:w-[120px] sm:h-[120px]" : "max-h-[294px] "
+					detail ? "w-[250px] h-[250px] sm:w-[120px] sm:h-[120px]" : "h-[282px]"
 				}`}
 			>
 				{hot && (
@@ -19,24 +53,24 @@ const ProductItem = ({ detail, link = "/", hot = false }) => {
 					</span>
 				)}
 				<img
-					src={product}
-					alt=""
-					className={`w-full object-cover  ${
+					src={image}
+					alt="item"
+					className={`w-full h-full object-contain ${
 						detail && "w-[250px] h-[250px] sm:w-[120px] sm:h-[120px]"
 					}`}
 				/>
 			</div>
 			<div className={`m-1 dark:bg-gray24 bg-white rounded-b-md  ${detail && "flex-grow w-0"}`}>
-				<a
-					href={link}
+				<Link
+					to={pathConstant.productInfo + "/" + id + ".html"}
 					className={`dark:text-whitee2 ${
 						detail
 							? "pt-0 font-medium text-2xl leading-9 sm:text-xl"
 							: "pt-[10px] mb-[5px] block text-center text-lg font-bold leading-3/2 sm:text-base"
 					}`}
 				>
-					Nike Air Max 270 React
-				</a>
+					{name}
+				</Link>
 				<div
 					className={`mb-[6px] flex gap-3 items-center ${
 						detail
@@ -44,12 +78,8 @@ const ProductItem = ({ detail, link = "/", hot = false }) => {
 							: " justify-center"
 					}`}
 				>
-					<StarRating active />
-					<StarRating active />
-					<StarRating />
-					<StarRating />
-					<StarRating />
-					{detail && "0 reviews"}
+					{renderRate(rating)}
+					{detail && `${reviews} reviews`}
 				</div>
 				<div className={`${detail ? "" : "text-center"}`}>
 					<span
@@ -69,19 +99,22 @@ const ProductItem = ({ detail, link = "/", hot = false }) => {
 				{detail && (
 					<>
 						<p className="line-clamp-3 text-md sm:line-clamp-2 mb-2 w-auto dark:text-whitee2 sm:text-xs">
-							Nunc facilisis sagittis ullamcorper. Proin lectus ipsum, gravida et mattis
-							vulputate, tristique ut lectus. Sed et lectus lorem nunc leifend laorevtr istique
-							et congue. Vivamus adipiscin vulputate g nisl ut dolorVivamus adipiscin vulputate
-							g nisl ut dolorVivamus adipiscin vulputate g nisl ut dolorVivamus adipiscin
-							vulputate g nisl ut dolor
+							{description}
 						</p>
 						<div className="text-[#33A0FF] flex gap-x-4 mb-1 dark:text-white">
 							<button className="bg-[#ebf5ff] dark:bg-[#33A0FF] sm:text-md flex gap-x-2 p-4 rounded-md sm:p-2">
 								<CartOutline color={"#00000"} height="24px" width="24px" />
 								Add to cart
 							</button>
-							<button className="bg-[#ebf5ff] dark:bg-[#33A0FF] p-4 rounded-md sm:p-2 sm:text-xs">
-								<HeartOutline color={"#00000"} height="24px" width="24px" />
+							<button
+								className="bg-[#ebf5ff] dark:bg-[#33A0FF] p-4 rounded-md sm:p-2 sm:text-xs"
+								onClick={handleChangeWhiteList}
+							>
+								{!isWhiteList ? (
+									<HeartOutline color={"#00000"} height="24px" width="24px" />
+								) : (
+									<Heart color={"red"} height="24px" width="24px" />
+								)}
 							</button>
 						</div>
 					</>
@@ -92,8 +125,13 @@ const ProductItem = ({ detail, link = "/", hot = false }) => {
 					detail && "hidden"
 				}`}
 			>
-				<button className="border-[#f0f6fa] p-4 border-2 hover:border-blue33 rounded-full transition-colors">
-					<HeartOutline color={"#33A0FF"} height="24px" width="24px" />
+				<button
+					className={`border-[#f0f6fa] p-4 border-2 hover:border-blue33 rounded-full transition-colors ${
+						isWhiteList ? "bg-blue33" : "bg-transparent"
+					}`}
+					onClick={handleChangeWhiteList}
+				>
+					<HeartOutline color={`${isWhiteList ? "#fff" : "#33A0FF"}`} height="24px" width="24px" />
 				</button>
 				<button className="border-[#f0f6fa] p-4 border-2 hover:border-blue33 rounded-full transition-colors">
 					<CartOutline color={"#33A0FF"} height="24px" width="20px" />

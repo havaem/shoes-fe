@@ -21,6 +21,7 @@ module.exports = {
 				grayfb: "#fbfbfb",
 				grayf1: "#F1F3F4",
 				grayc1: "#C1C8CE",
+				gray3a: "#3a3b3c",
 				gray24: "#242526",
 				yellowff: "#FFC600",
 			},
