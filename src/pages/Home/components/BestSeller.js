@@ -28,14 +28,14 @@ const BestSeller = () => {
 					</ul>
 				</div>
 				<div className="max-w-[1300px] gap-[33px] md:gap-[15px] grid grid-cols-4 mb-6 mx-auto lg:grid-cols-2 xl:px-4">
+					{/* <ProductItem hot />
 					<ProductItem hot />
-					<ProductItem hot />
 					<ProductItem />
 					<ProductItem />
 					<ProductItem />
 					<ProductItem />
 					<ProductItem />
-					<ProductItem />
+					<ProductItem /> */}
 				</div>
 				<div className="text-center">
 					<a

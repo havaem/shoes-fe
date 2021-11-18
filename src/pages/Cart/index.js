@@ -1,11 +1,13 @@
 import { CartContext } from "contexts/CartContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CloseOutline } from "react-ionicons";
+import { useSelector } from "react-redux";
 import ItemCart from "./components/ItemCart";
 import MakePayment1 from "./components/MakePayment1";
 
 const Cart = () => {
 	const { statusCart, setStatusCart } = useContext(CartContext);
+	const cart = useSelector((state) => state.cart);
 	const handleClick = () => {
 		if (!statusCart) {
 			setStatusCart(true);
@@ -15,6 +17,10 @@ const Cart = () => {
 			document.body.classList.remove("overflow-y-hidden");
 		}
 	};
+	const [total, setTotal] = useState(cart.total ? cart.total : 0);
+	useEffect(() => {
+		setTotal(cart.total + 20);
+	}, [cart.total]);
 	return (
 		<section>
 			<div className="max-w-[1300px] md:mt-[70px] mx-auto xl:px-4">
@@ -29,9 +35,9 @@ const Cart = () => {
 							</tr>
 						</thead>
 						<tbody className="">
-							<ItemCart />
-							<ItemCart />
-							<ItemCart />
+							{cart.cart.map((e) => (
+								<ItemCart key={e.name + " - " + e.color + " - " + e.size} product={e} />
+							))}
 						</tbody>
 					</table>
 				</div>
@@ -50,7 +56,7 @@ const Cart = () => {
 						<div className="flex flex-col gap-y-4 pb-4 border-b border-grayf1">
 							<div className="flex items-center justify-between">
 								<p>Subtotal</p>
-								<p>$998</p>
+								<p>${cart.total}</p>
 							</div>
 							<div className="flex items-center justify-between">
 								<p>Shipping fee</p>
@@ -58,13 +64,13 @@ const Cart = () => {
 							</div>
 							<div className="flex items-center justify-between">
 								<p>Coupon</p>
-								<p>No</p>
+								<p>{!cart.coupon ? "No" : "Yes"}</p>
 							</div>
 						</div>
 						<div className="flex flex-col gap-y-4 py-4">
 							<div className="flex items-center justify-between">
 								<p>TOTAL</p>
-								<p>$$118</p>
+								<p>${total}</p>
 							</div>
 							<button
 								className="round-md py-3 text-white dark:text-whitee2 dark:bg-black1f bg-blue33"

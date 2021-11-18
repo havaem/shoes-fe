@@ -9,3 +9,16 @@ export const renderRoute = (routes) =>
 			<Route key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />
 		);
 	});
+
+export const convertTimestampToDate = (timestamp) => {
+	const date = new Date(timestamp);
+	return date.toLocaleDateString("en-US", {
+		year: "numeric",
+		day: "numeric",
+		month: "numeric",
+		hour12: true,
+		hour: "numeric",
+		minute: "numeric",
+		second: "numeric",
+	});
+};

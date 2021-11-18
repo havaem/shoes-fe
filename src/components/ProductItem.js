@@ -15,6 +15,7 @@ const ProductItem = ({
 	description,
 	image,
 	detail,
+	price,
 	link = "/",
 	hot = false,
 }) => {
@@ -87,14 +88,18 @@ const ProductItem = ({
 							detail ? "mr-2" : " sm:block sm:mr-0"
 						}`}
 					>
-						$299,43
+						${price.basic}
 					</span>
-					<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
-						$534,33
-					</span>
-					<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
-						24% Off
-					</span>
+					{price.percent && (
+						<>
+							<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
+								${price.discount}
+							</span>
+							<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
+								{price.percent}% Off
+							</span>
+						</>
+					)}
 				</div>
 				{detail && (
 					<>
@@ -102,10 +107,13 @@ const ProductItem = ({
 							{description}
 						</p>
 						<div className="text-[#33A0FF] flex gap-x-4 mb-1 dark:text-white">
-							<button className="bg-[#ebf5ff] dark:bg-[#33A0FF] sm:text-md flex gap-x-2 p-4 rounded-md sm:p-2">
+							<Link
+								className="bg-[#ebf5ff] dark:bg-[#33A0FF] sm:text-md flex gap-x-2 p-4 rounded-md sm:p-2"
+								to={`${pathConstant.productInfo}/${id}.html`}
+							>
 								<CartOutline color={"#00000"} height="24px" width="24px" />
 								Add to cart
-							</button>
+							</Link>
 							<button
 								className="bg-[#ebf5ff] dark:bg-[#33A0FF] p-4 rounded-md sm:p-2 sm:text-xs"
 								onClick={handleChangeWhiteList}
@@ -133,9 +141,12 @@ const ProductItem = ({
 				>
 					<HeartOutline color={`${isWhiteList ? "#fff" : "#33A0FF"}`} height="24px" width="24px" />
 				</button>
-				<button className="border-[#f0f6fa] p-4 border-2 hover:border-blue33 rounded-full transition-colors">
+				<Link
+					to={`${pathConstant.productInfo}/${id}.html`}
+					className="border-[#f0f6fa] p-4 border-2 hover:border-blue33 rounded-full transition-colors"
+				>
 					<CartOutline color={"#33A0FF"} height="24px" width="20px" />
-				</button>
+				</Link>
 			</div>
 		</div>
 	);

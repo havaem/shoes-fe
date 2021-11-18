@@ -1,24 +1,20 @@
 import Slide from "components/Slide";
-import {
-	CartOutline,
-	ChatbubbleEllipsesOutline,
-	Heart,
-	HeartOutline,
-	LogoFacebook,
-	LogoTwitter,
-} from "react-ionicons";
+import { CartOutline, Heart, HeartOutline, LogoFacebook, LogoTwitter } from "react-ionicons";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOneProduct, ratingProduct } from "reducers/asyncThunk/productAsyncThunk";
 import { changeWhiteListUser } from "reducers/asyncThunk/userAsyncThunk";
-import { errorNoti, successNoti } from "reducers/notiReducer";
+import { errorNoti, successNoti, warningNoti } from "reducers/notiReducer";
 import Directory from "components/Directory";
-import StarRating from "components/StarRating";
 import Loading from "components/Loading";
 import ColorButton from "components/ColorButton";
 import { renderStarRating } from "common";
-import ReactStars from "react-stars";
+import ProductDescription from "./components/ProductDescription";
+import ProductRating from "./components/ProductRating";
+import ProductUserRating from "./components/ProductUserRating";
+import ProductComment from "./components/ProductComment";
+import { addToCart } from "reducers/cartReducer";
 const testValue = [
 	{ link: "/", title: "Home" },
 	{ link: "/", title: "Home" },
@@ -30,7 +26,7 @@ const ProductInfo = () => {
 	const [product, setProduct] = useState(null);
 	const [isWhiteList, setIsWhiteList] = useState();
 	const [userSelect, setUserSelect] = useState({
-		size: null,
+		size: undefined,
 		color: null,
 		amount: 1,
 	});
@@ -50,9 +46,12 @@ const ProductInfo = () => {
 			);
 		},
 	};
+	const [userRating, setUserRating] = useState();
 	//* selector
+	const userLogin = useSelector((state) => state.user.user);
 	const userWhiteList = useSelector((state) => state.user.user.whitelist);
 	const loading = useSelector((state) => state.product.loading);
+	const cart = useSelector((state) => state.cart);
 	//* function
 	const handleChangeWhiteList = async () => {
 		try {
@@ -83,48 +82,66 @@ const ProductInfo = () => {
 	const handleChangeRating = async (rating) => {
 		try {
 			const response = await dispatch(ratingProduct({ id: id, rating: rating })).unwrap();
+			setProduct({ ...product, rating: response.data });
 			dispatch(successNoti({ message: response.message, delay: 1500 }));
 		} catch (error) {
 			dispatch(errorNoti({ message: error.message, delay: 1500 }));
 		}
 	};
-	const percentProcess = (type) => {
-		let percent = 0;
-		const sum =
-			product.rating.ratingByTimes.oneStar.length +
-			product.rating.ratingByTimes.twoStars.length +
-			product.rating.ratingByTimes.threeStars.length +
-			product.rating.ratingByTimes.fourStars.length +
-			product.rating.ratingByTimes.fiveStars.length;
-		console.log(sum);
-		if (sum === 0) return `w-[0%]`;
-		switch (type) {
-			case 1:
-				percent = (product.rating.ratingByTimes.oneStar.length / sum) * 100;
-				console.log(percent);
-				break;
-			case 2:
-				percent = (product.rating.ratingByTimes.twoStars.length / sum) * 100;
-				break;
-			case 3:
-				percent = (product.rating.ratingByTimes.threeStars.length / sum) * 100;
-				break;
-			case 4:
-				percent = (product.rating.ratingByTimes.fourStars.length / sum) * 100;
-				break;
-			case 5:
-				percent = (product.rating.ratingByTimes.fiveStars.length / sum) * 100;
-				break;
-			default:
-				break;
+	const handleAddToCart = () => {
+		if (cart.amount < 5) {
+			dispatch(
+				addToCart({
+					...userSelect,
+					id: id,
+					image: product.image[0],
+					name: product.name,
+					price: product.price.discount ? product.price.discount : product.price.basic,
+					total: product.price.discount
+						? product.price.discount
+						: product.price.basic * userSelect.amount,
+					max: product.amount,
+				})
+			);
+			dispatch(successNoti({ message: "Add to cart success!", delay: 1500 }));
+		} else {
+			dispatch(warningNoti({ message: "Your cart is full!", delay: 1500 }));
 		}
-		return `${percent}%`;
 	};
 	useEffect(() => {
 		product && setUserSelect({ ...userSelect, size: product.size[0], color: product.color[0] });
 		product && setIsWhiteList(userWhiteList.indexOf(product._id) !== -1);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [product]);
+	useEffect(() => {
+		if (product && userLogin.email) {
+			for (const property in product.rating.ratingByTimes) {
+				for (let i = 0; i < product.rating.ratingByTimes[property].length; i++) {
+					if (product.rating.ratingByTimes[property][i].email === userLogin.email) {
+						switch (property) {
+							case "oneStar":
+								setUserRating(1);
+								break;
+							case "twoStars":
+								setUserRating(2);
+								break;
+							case "threeStars":
+								setUserRating(3);
+								break;
+							case "fourStars":
+								setUserRating(4);
+								break;
+							case "fiveStars":
+								setUserRating(5);
+								break;
+							default:
+								break;
+						}
+					}
+				}
+			}
+		}
+	}, [product, userLogin.email]);
 	useEffect(() => {
 		const getInfoProduct = async () => {
 			try {
@@ -173,14 +190,18 @@ const ProductInfo = () => {
 							</div>
 							<div className="my-4">
 								<span className="mr-3 text-blue40 text-lg font-bold tracking-1/2 leading-9/5 sm:block sm:mr-0 sm:text-base">
-									$299,43
+									${product.price.basic}
 								</span>
-								<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
-									$534,33
-								</span>
-								<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
-									24% Off
-								</span>
+								{product.price.discount && (
+									<>
+										<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
+											$534,33
+										</span>
+										<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
+											24% Off
+										</span>
+									</>
+								)}
 							</div>
 							<div className="flex flex-col gap-y-4 pb-5 dark:text-whitee2 border-b-2 border-grayf6">
 								<div className="flex justify-between">
@@ -261,7 +282,10 @@ const ProductInfo = () => {
 									</button>
 								</div>
 								<div className="text-[#33A0FF] flex gap-x-4 mb-1 dark:text-white">
-									<button className="bg-[#ebf5ff] dark:bg-[#33A0FF] sm:text-md flex gap-x-2 p-4 rounded-md sm:p-2">
+									<button
+										className="bg-[#ebf5ff] dark:bg-[#33A0FF] sm:text-md flex gap-x-2 p-4 rounded-md sm:p-2"
+										onClick={handleAddToCart}
+									>
 										<CartOutline color={"#00000"} height="24px" width="24px" />
 										Add to cart
 									</button>
@@ -294,199 +318,20 @@ const ProductInfo = () => {
 							</div>
 						</div>
 					</div>
-					<div className="mt-8 p-4 bg-grayfa rounded-md">
-						<h3 className="mb-2 text-blue33 text-2xl font-medium">Product Information</h3>
-						<p className="first-letter:ml-8 text-base">{product.description}</p>
-					</div>
-					<div className="mt-8 p-4 bg-grayfa rounded-md">
-						<h3 className="mb-4 text-blue33 text-2xl font-medium">
-							Rating:{" "}
-							{product.rating.ratingByTimes.oneStar.length +
-								product.rating.ratingByTimes.twoStars.length +
-								product.rating.ratingByTimes.threeStars.length +
-								product.rating.ratingByTimes.fourStars.length +
-								product.rating.ratingByTimes.fiveStars.length}{" "}
-							times - {product.rating.averageRating}/5⭐
-						</h3>
-						<div className="flex flex-col gap-y-4 font-mono">
-							<div className="flex gap-x-6 items-center">
-								<div className="flex gap-x-1 items-center">
-									1 <StarRating active />
-								</div>
-								<div className="relative flex-grow bg-gray-200 rounded-md overflow-hidden">
-									<div
-										style={{ width: `${percentProcess(1)}` }}
-										className="h-6 bg-yellowff"
-									></div>
-									<span className="absolute-center absolute">
-										{product.rating.ratingByTimes.oneStar.length} times
-									</span>
-								</div>
-							</div>
-							<div className="flex gap-x-6 items-center">
-								<div className="flex gap-x-1 items-center">
-									2<StarRating active />
-								</div>
-								<div className="relative flex-grow bg-gray-200 rounded-md overflow-hidden">
-									<div
-										style={{ width: `${percentProcess(2)}` }}
-										className="h-6 bg-yellowff"
-									></div>
-									<span className="absolute-center absolute">
-										{product.rating.ratingByTimes.twoStars.length} times
-									</span>
-								</div>
-							</div>
-							<div className="flex gap-x-6 items-center">
-								<div className="flex gap-x-1 items-center">
-									3<StarRating active />
-								</div>
-								<div className="relative flex-grow bg-gray-200 rounded-md overflow-hidden">
-									<div
-										style={{ width: `${percentProcess(3)}` }}
-										className="h-6 bg-yellowff"
-									></div>
-									<span className="absolute-center absolute">
-										{product.rating.ratingByTimes.threeStars.length} times
-									</span>
-								</div>
-							</div>
-							<div className="flex gap-x-6 items-center">
-								<div className="flex gap-x-1 items-center">
-									4<StarRating active />
-								</div>
-								<div className="relative flex-grow bg-gray-200 rounded-md overflow-hidden">
-									<div
-										style={{ width: `${percentProcess(4)}` }}
-										className="h-6 bg-yellowff"
-									></div>
-									<span className="absolute-center absolute">
-										{product.rating.ratingByTimes.fourStars.length} times
-									</span>
-								</div>
-							</div>
-							<div className="flex gap-x-6 items-center">
-								<div className="flex gap-x-1 items-center">
-									5<StarRating active />
-								</div>
-
-								<div className="relative flex-grow bg-gray-200 rounded-md overflow-hidden">
-									<div
-										style={{ width: `${percentProcess(5)}` }}
-										className="h-6 bg-yellowff"
-									></div>
-									<span className="absolute-center absolute">
-										{product.rating.ratingByTimes.fiveStars.length} times
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className="mt-8 p-4 bg-grayfa rounded-md">
-						<h3 className="mb-4 text-blue33 text-2xl font-medium">Your rating:</h3>
-						<ReactStars
-							count={5}
-							onChange={(newRating) => {
-								handleChangeRating(newRating);
-							}}
-							half={false}
-							size={30}
-							activeColor="#ffd700"
-						/>
-					</div>
-					<div className="mt-8 p-4 bg-grayfa rounded-md">
-						<h3 className="mb-4 text-blue33 text-2xl font-medium">Comments</h3>
-						<div className="flex flex-wrap gap-y-2 rounded-md">
-							<textarea className="p-2 w-full outline-none" rows="3"></textarea>
-							<button className="ml-auto px-4 py-2 text-white bg-redfb rounded-md">
-								Submit
-							</button>
-						</div>
-						<div>
-							{/* Comment item */}
-							<div className="flex gap-4">
-								{/* Avatar */}
-								<div className="flex-shrink-0 mt-2 w-9 h-9">
-									<img
-										src={product}
-										alt=""
-										className="w-full h-full border-2 border-blue33 rounded-full object-cover"
-									/>
-								</div>
-								{/* Content */}
-								<div className="flex-grow">
-									<div className="flex flex-wrap items-center justify-between">
-										<p className="text-lg font-medium">Võ Hoài Nam</p>
-										<h4 className="text-[#e87a5a] text-xs">04/11/2021 5:07 CH</h4>
-									</div>
-									<div className="flex gap-x-2 mb-2">
-										<StarRating active />
-										<StarRating active />
-										<StarRating active />
-										<StarRating />
-										<StarRating />
-									</div>
-									<p className="mb-2 font-sans text-base">
-										Lorem Ipsum is simply dummy text of the printing and typesetting
-										industry. Lorem Ipsum has been the industry's standard dummy text ever
-										since the 1500s
-									</p>
-									<button className="flex gap-x-1 items-center ml-auto text-gray-400 text-sm">
-										<ChatbubbleEllipsesOutline
-											color={"#00000"}
-											height="14px"
-											width="14px"
-										/>
-										Answer
-									</button>
-									{/* Rep comment item */}
-									<div className="flex gap-4 mb-2">
-										<div className="flex-shrink-0 mt-2 w-9 h-9">
-											<img
-												src={product}
-												alt=""
-												className="w-full h-full border-2 border-blue33 rounded-full object-cover"
-											/>
-										</div>
-										{/* Content */}
-										<div className="flex-grow">
-											<div className="flex flex-wrap items-center justify-between">
-												<p className="text-lg font-medium">Võ Hoài Nam</p>
-												<h4 className="text-[#e87a5a] text-xs">04/11/2021 5:07 CH</h4>
-											</div>
-											<div className="flex gap-x-2 mb-2">
-												<StarRating active />
-												<StarRating active />
-												<StarRating active />
-												<StarRating />
-												<StarRating />
-											</div>
-											<p className="mb-2 font-sans text-base">
-												Lorem Ipsum is simply dummy text of the printing and
-												typesetting industry. Lorem Ipsum has been the industry's
-												standard dummy text ever since the 1500s
-											</p>
-											<button className="flex gap-x-1 items-center ml-auto text-gray-400 text-sm">
-												<ChatbubbleEllipsesOutline
-													color={"#00000"}
-													height="14px"
-													width="14px"
-												/>
-												Answer
-											</button>
-										</div>
-									</div>
-									{/* Comment Box */}
-									<div className="flex flex-wrap gap-y-2 justify-end rounded-md">
-										<textarea className="p-2 w-full outline-none" rows="3"></textarea>
-										<button className="px-4 py-2 text-white bg-redfb rounded-md">
-											Submit
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<ProductDescription data={product.description} />
+					<ProductRating product={product} />
+					<ProductUserRating
+						login={userLogin.email}
+						value={userRating}
+						onChange={handleChangeRating}
+					/>
+					<ProductComment
+						id={id}
+						login={userLogin.email}
+						dispatch={dispatch}
+						product={product}
+						userRating={userRating}
+					/>
 				</div>
 			</section>
 		)

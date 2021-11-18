@@ -38,6 +38,7 @@ const BottomNavItem = ({ active = false, button, children, link = "/", className
 };
 const Header = () => {
 	const user = useSelector((state) => state.user.user.email);
+	const cart = useSelector((state) => state.cart.cart);
 	const { setStatusMenu } = useContext(MenuContext);
 	return (
 		<header>
@@ -57,7 +58,7 @@ const Header = () => {
 
 					<TopNavItem link={pathConstant.cart}>
 						<span className="text-[10px] absolute -right-2 -top-2 flex items-center justify-center w-5 h-5 text-white font-bold bg-redff border-2 border-white rounded-full">
-							2
+							{cart.length}
 						</span>
 						<CartOutline color={"#00000"} height="24px" width="24px" />
 					</TopNavItem>

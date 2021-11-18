@@ -174,11 +174,18 @@ const Filter = () => {
 									id={e._id}
 									detail={viewOption === 1 ? false : true}
 									key={i}
+									price={e.price}
 									name={e.name}
 									image={e.image[0]}
 									description={e.description}
 									rating={e.rating.averageRating}
-									reviews={e.rating.ratingByTimes.length}
+									reviews={
+										e.rating.ratingByTimes.oneStar.length +
+										e.rating.ratingByTimes.twoStars.length +
+										e.rating.ratingByTimes.threeStars.length +
+										e.rating.ratingByTimes.fourStars.length +
+										e.rating.ratingByTimes.fiveStars.length
+									}
 								/>
 							))}
 					</div>

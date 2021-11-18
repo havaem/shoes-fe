@@ -34,7 +34,6 @@ export default function Register() {
 			history.push("/");
 		} catch (err) {
 			dispatch(errorNoti({ message: err.message }));
-			console.log(err);
 		}
 	};
 	return (
