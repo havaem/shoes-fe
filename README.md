@@ -20,3 +20,8 @@
 -   Định hình path
 
 ### 02/11/2021
+
+#### Account Paypal :
+
+-   Username : sb-wou4h8612128@personal.example.com
+-   Password : e)]+{7Z2

@@ -9,6 +9,20 @@ export const cartSlice = createSlice({
 		coupon: null,
 	},
 	reducers: {
+		clearCart:(state) => {
+			state.cart = [];
+			state.amount = 0;
+			state.total = 0;
+			state.coupon = null;
+		},
+		addVoucher: (state, action) => {
+			state.coupon = action.payload;
+			localStorage.setItem("cart", JSON.stringify(state));
+		},
+		removeVoucher: (state) => {
+			state.coupon = null;
+			localStorage.setItem("cart", JSON.stringify(state));
+		},
 		setCartFromLocalStorage: (state) => {
 			let cartLocal = JSON.parse(localStorage.getItem("cart"));
 			if (cartLocal) {
@@ -81,5 +95,13 @@ export const cartSlice = createSlice({
 	},
 });
 
-export const { addToCart, removeFromCart, changeAmountItem, setCartFromLocalStorage } = cartSlice.actions;
+export const {
+	removeVoucher,
+	addVoucher,
+	addToCart,
+	removeFromCart,
+	changeAmountItem,
+	setCartFromLocalStorage,
+	clearCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;

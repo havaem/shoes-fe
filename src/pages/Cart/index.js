@@ -1,13 +1,20 @@
 import { CartContext } from "contexts/CartContext";
 import { useContext, useEffect, useState } from "react";
 import { CloseOutline } from "react-ionicons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getVoucher } from "reducers/asyncThunk/voucherAsyncThunk";
+import { addVoucher, removeVoucher } from "reducers/cartReducer";
+import { errorNoti, successNoti } from "reducers/notiReducer";
 import ItemCart from "./components/ItemCart";
-import MakePayment1 from "./components/MakePayment1";
+import MakePayment from "./components/MakePayment";
 
 const Cart = () => {
+	const dispatch = useDispatch();
 	const { statusCart, setStatusCart } = useContext(CartContext);
 	const cart = useSelector((state) => state.cart);
+	const [total, setTotal] = useState(0);
+	const [voucher, setVoucher] = useState("");
+	const [voucherPrice, setVoucherPrice] = useState(0);
 	const handleClick = () => {
 		if (!statusCart) {
 			setStatusCart(true);
@@ -17,10 +24,46 @@ const Cart = () => {
 			document.body.classList.remove("overflow-y-hidden");
 		}
 	};
-	const [total, setTotal] = useState(cart.total ? cart.total : 0);
+	const handleRedeemVoucher = async () => {
+		try {
+			const response = await dispatch(getVoucher(voucher)).unwrap();
+			dispatch(
+				addVoucher({
+					id: response._id,
+					code: response.code,
+					type: response.type,
+					price: { ...response.price },
+				})
+			);
+			dispatch(successNoti({ message: "Add voucher success!" }));
+		} catch (error) {
+			dispatch(errorNoti({ message: error.message }));
+		}
+	};
+	const handleRemoveVoucher = async () => {
+		setVoucher("");
+		setVoucherPrice(0);
+		dispatch(removeVoucher());
+	};
 	useEffect(() => {
 		setTotal(cart.total + 20);
 	}, [cart.total]);
+	useEffect(() => {
+		if (cart.coupon && total > 0) {
+			setVoucher(cart.coupon.code);
+			if (cart.coupon.type === 1) {
+				setVoucherPrice(cart.coupon.price.basic);
+			} else if (cart.coupon.type === 2) {
+				setVoucherPrice((cart.total * cart.coupon.price.percent) / 100);
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cart.coupon, total]);
+	useEffect(() => {
+		if (voucherPrice !== 0) setTotal(total - voucherPrice);
+		else setTotal(cart.total + 20);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [voucherPrice]);
 	return (
 		<section>
 			<div className="max-w-[1300px] md:mt-[70px] mx-auto xl:px-4">
@@ -46,11 +89,29 @@ const Cart = () => {
 						<input
 							type="text"
 							className="pr-[120px] pl-4 py-2 w-full h-full dark:text-whitee2 dark:bg-black1f border-2 dark:border-gray-200 border-grayf1 rounded-md outline-none"
+							value={voucher}
 							placeholder="Voucher code"
+							onChange={(event) => {
+								setVoucher(event.target.value);
+							}}
+							disabled={cart.coupon}
+							name="voucher"
 						/>
-						<button className="px-[21px] absolute right-0 top-0 flex items-center justify-center h-full text-white dark:text-whitee2 dark:bg-black1f bg-blue33 rounded-br-sm rounded-tr-sm">
-							Redeem
-						</button>
+						{cart.coupon ? (
+							<button
+								className="px-[21px] absolute right-0 top-0 flex items-center justify-center h-full text-white dark:text-whitee2 dark:bg-black1f bg-blue33 rounded-br-sm rounded-tr-sm"
+								onClick={handleRemoveVoucher}
+							>
+								Remove
+							</button>
+						) : (
+							<button
+								className="px-[21px] absolute right-0 top-0 flex items-center justify-center h-full text-white dark:text-whitee2 dark:bg-black1f bg-blue33 rounded-br-sm rounded-tr-sm"
+								onClick={handleRedeemVoucher}
+							>
+								Redeem
+							</button>
+						)}
 					</div>
 					<div className="max-w-[370px] w-full dark:text-whitee2">
 						<div className="flex flex-col gap-y-4 pb-4 border-b border-grayf1">
@@ -64,7 +125,7 @@ const Cart = () => {
 							</div>
 							<div className="flex items-center justify-between">
 								<p>Coupon</p>
-								<p>{!cart.coupon ? "No" : "Yes"}</p>
+								<p>{!cart.coupon ? "No" : `- $${voucherPrice}`}</p>
 							</div>
 						</div>
 						<div className="flex flex-col gap-y-4 py-4">
@@ -102,7 +163,7 @@ const Cart = () => {
 							<CloseOutline color={"#00000"} height="40px" width="40px" />
 						</button>
 					</div>
-					<MakePayment1 />
+					<MakePayment price={total} voucherPrice={voucherPrice} />
 				</div>
 			</div>
 		</section>
