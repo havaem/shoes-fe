@@ -1,6 +1,6 @@
 import icon from "assets/icons/icon.png";
 import { ErrorMessage } from "pages/Cart/components/ErrorMessage";
-import GoogleLogin, { GoogleLogout } from "react-google-login";
+import GoogleLogin from "react-google-login";
 import { useForm } from "react-hook-form";
 import { LogoGoogle } from "react-ionicons";
 import { useDispatch } from "react-redux";

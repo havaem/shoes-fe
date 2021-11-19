@@ -1,4 +1,3 @@
-import product from "assets/images/product.png";
 import ProductOrderItem from "./ProductOrderItem";
 export default function OrderItemDetail({ order }) {
 	return (

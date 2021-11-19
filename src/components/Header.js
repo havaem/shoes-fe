@@ -45,10 +45,16 @@ const Header = () => {
 			<div className="px-[123px] dark:bg-black xl:px-4">
 				<div className="h-[70px] gap-x-[30px] border-[#FAFAFB] flex items-center justify-end border-b-2 md:hidden">
 					{user ? (
-						<TopNavItem className="flex gap-x-1 items-center" link="/dashboard/order-info">
-							<PersonOutline color={"#00000"} height="20px" width="20px" />
-							My profile
-						</TopNavItem>
+						<>
+							<TopNavItem className="flex gap-x-1 items-center" link="/dashboard/order-info">
+								<PersonOutline color={"#00000"} height="20px" width="20px" />
+								My profile
+							</TopNavItem>
+							<TopNavItem className="flex gap-x-1 items-center" link="/admin">
+								<PersonOutline color={"#00000"} height="20px" width="20px" />
+								ADMIN PANEL
+							</TopNavItem>
+						</>
 					) : (
 						<>
 							<TopNavItem link={pathConstant.login}>Login</TopNavItem>

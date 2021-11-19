@@ -32,7 +32,7 @@ export default function OrderInfo() {
 	return (
 		<>
 			{orders.map((e) => (
-				<OrderItem order={e} handleCancelOrder={handleCancelOrder} />
+				<OrderItem key={e._id} order={e} handleCancelOrder={handleCancelOrder} />
 			))}
 		</>
 	);

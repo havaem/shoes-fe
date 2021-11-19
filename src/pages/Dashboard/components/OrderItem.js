@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { convertTimestampToDate } from "utils";
 import OrderItemDetail from "./OrderItemDetail";
 
