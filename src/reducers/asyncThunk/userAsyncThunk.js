@@ -53,3 +53,21 @@ export const changeWhiteListUser = createAsyncThunk("user/whitelist", async (dat
 		return rejectWithValue(error.response.data);
 	}
 });
+
+// Admin
+export const getAllUsers = createAsyncThunk("user/getAllUsers", async (data, { rejectWithValue }) => {
+	try {
+		const response = await userApi.getAllUsers(data);
+		return response;
+	} catch (error) {
+		return rejectWithValue(error.response.data);
+	}
+});
+export const updateUser = createAsyncThunk("user/updateUser", async (data, { rejectWithValue }) => {
+	try {
+		const response = await userApi.updateUser(data);
+		return response;
+	} catch (error) {
+		return rejectWithValue(error.response.data);
+	}
+});

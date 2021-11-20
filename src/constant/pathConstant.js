@@ -6,4 +6,5 @@ export const pathConstant = {
 	login: "/login",
 	register: "/register",
 	dashboard: "/dashboard",
+	admin: "/admin",
 };

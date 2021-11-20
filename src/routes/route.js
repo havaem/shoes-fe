@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const { pathConstant } = require("constant/pathConstant");
 
+const Admin = lazy(() => import("pages/Admin"));
 const Dashboard = lazy(() => import("pages/Dashboard"));
 const Home = lazy(() => import("pages/Home"));
 const ProductList = lazy(() => import("pages/ProductList"));
@@ -16,7 +17,7 @@ export const routes = [
 		component: Home,
 	},
 	{
-		exact: true,
+		exact: false,
 		path: pathConstant.productList,
 		component: ProductList,
 	},
@@ -44,6 +45,12 @@ export const routes = [
 		exact: false,
 		path: pathConstant.dashboard,
 		component: Dashboard,
+		private: true,
+	},
+	{
+		exact: false,
+		path: pathConstant.admin,
+		component: Admin,
 		private: true,
 	},
 ];

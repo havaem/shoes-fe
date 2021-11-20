@@ -1,14 +1,12 @@
-import { BagHandleOutline, BanOutline, KeyOutline } from "react-ionicons";
+import { BagHandleOutline, BanOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Switch, useRouteMatch, Link } from "react-router-dom";
 import { logout } from "reducers/userReducer";
 import { renderRoute } from "utils";
-import ChangePassword from "./components/ChangePassword";
-import OrderInfo from "./components/OrderInfo";
-const dashboardRoute = [
-	{ path: "/dashboard/order-info", component: OrderInfo, exact: true },
-	{ path: "/dashboard/change-password", component: ChangePassword, exact: true },
+import UserManagement from "./pages/UserManagement/";
+const adminRoutes = [
+	{ path: "/admin/manage-user/", component: UserManagement, exact: true, label: "User Management" },
 ];
 
 const LinkCustom = ({ label, to, activeOnlyWhenExact, Icon }) => {
@@ -26,7 +24,7 @@ const LinkCustom = ({ label, to, activeOnlyWhenExact, Icon }) => {
 	);
 };
 
-export default function Dashboard() {
+export default function Admin() {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.user);
@@ -51,18 +49,16 @@ export default function Dashboard() {
 				</div>
 				<div className="flex gap-4 p-2 border-t-2 border-grayf1 lg:flex-col">
 					<ul className="max-w-[250px] flex flex-col gap-y-2 w-full dark:text-whitee2 border-r-2 border-grayf1 lg:max-w-none lg:border-b-2 lg:border-r-0">
-						<LinkCustom
-							activeOnlyWhenExact={true}
-							to={dashboardRoute[0].path}
-							label={"Order"}
-							Icon={BagHandleOutline}
-						/>
-						<LinkCustom
-							activeOnlyWhenExact={true}
-							to={dashboardRoute[1].path}
-							label={"Password"}
-							Icon={KeyOutline}
-						/>
+						{adminRoutes.map((e) => (
+							<LinkCustom
+								activeOnlyWhenExact={e.exact}
+								to={e.path}
+								label={e.label}
+								Icon={BagHandleOutline}
+								key={e.path}
+							/>
+						))}
+
 						<li className={`px-2 py-3`}>
 							<button className="flex gap-x-2 items-center" onClick={logOut}>
 								<BanOutline color={"#33A0FF"} height="24px" width="24px" />
@@ -71,7 +67,7 @@ export default function Dashboard() {
 						</li>
 					</ul>
 					<div className="flex-1">
-						<Switch>{renderRoute(dashboardRoute)}</Switch>
+						<Switch>{renderRoute(adminRoutes)}</Switch>
 					</div>
 				</div>
 			</div>

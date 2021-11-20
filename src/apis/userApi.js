@@ -39,6 +39,24 @@ const userApi = {
 			},
 		});
 	},
+	getAllUsers: () => {
+		const token = localStorage.getItem("token");
+		const url = `${baseURL}/admin/`;
+		return axiosClient.get(url, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+	},
+	updateUser: ({ id, data }) => {
+		const token = localStorage.getItem("token");
+		const url = `${baseURL}/admin/${id}`;
+		return axiosClient.put(url, data, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+	},
 	/*getInfoUser: (data) => {
 		const url = `${baseURL}/info`;
 		return axiosClient.get(url, {
