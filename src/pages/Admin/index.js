@@ -1,12 +1,26 @@
-import { BagHandleOutline, BanOutline } from "react-ionicons";
+import { BanOutline, PersonOutline, ReceiptOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Switch, useRouteMatch, Link } from "react-router-dom";
 import { logout } from "reducers/userReducer";
 import { renderRoute } from "utils";
 import UserManagement from "./pages/UserManagement/";
+import VoucherManagement from "./pages/VoucherManagement";
 const adminRoutes = [
-	{ path: "/admin/manage-user/", component: UserManagement, exact: true, label: "User Management" },
+	{
+		path: "/admin/manage-user/",
+		component: UserManagement,
+		exact: true,
+		label: "User Management",
+		Icon: PersonOutline,
+	},
+	{
+		path: "/admin/manage-voucher/",
+		component: VoucherManagement,
+		exact: true,
+		label: "Voucher Management",
+		Icon: ReceiptOutline,
+	},
 ];
 
 const LinkCustom = ({ label, to, activeOnlyWhenExact, Icon }) => {
@@ -54,7 +68,7 @@ export default function Admin() {
 								activeOnlyWhenExact={e.exact}
 								to={e.path}
 								label={e.label}
-								Icon={BagHandleOutline}
+								Icon={e.Icon}
 								key={e.path}
 							/>
 						))}

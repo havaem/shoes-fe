@@ -18,10 +18,10 @@ export default function OrderInfo() {
 	const handleCancelOrder = async (id) => {
 		if (window.confirm("Are you sure to cancel this order?")) {
 			try {
-				await dispatch(cancelOrder(id));
+				await dispatch(cancelOrder(id)).unwrap();
 				getAll();
 			} catch (error) {
-				console.log(error);
+				console.log(error.message);
 			}
 		}
 	};

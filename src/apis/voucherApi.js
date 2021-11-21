@@ -5,5 +5,23 @@ const voucherApi = {
 		const url = `${baseURL}/${id}`;
 		return axiosClient.get(url);
 	},
+	getAll: () => {
+		const url = `${baseURL}/`;
+		return axiosClient.get(url);
+	},
+	create: (data) => {
+		const url = `${baseURL}/`;
+		return axiosClient.post(url, data);
+	},
+	delete: (id) => {
+		const url = `${baseURL}/${id}`;
+		return axiosClient.delete(url);
+	},
+	update: ({ id, data }) => {
+		console.log(id);
+		console.log(data);
+		const url = `${baseURL}/${id}`;
+		return axiosClient.put(url, data);
+	},
 };
 export default voucherApi;

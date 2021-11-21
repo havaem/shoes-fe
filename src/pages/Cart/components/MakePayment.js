@@ -1,14 +1,16 @@
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "./ErrorMessage";
 import { PayPalButton } from "react-paypal-button-v2";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "reducers/asyncThunk/orderAsyncThunk";
 import { clearCart } from "reducers/cartReducer";
 import { useHistory } from "react-router";
 import { pathConstant } from "constant/pathConstant";
+import { CartContext } from "contexts/CartContext";
 export default function MakePayment({ price, voucherPrice }) {
 	const dispatch = useDispatch();
+	const { setStatusCart } = useContext(CartContext);
 	const history = useHistory();
 	const {
 		register,
@@ -46,10 +48,11 @@ export default function MakePayment({ price, voucherPrice }) {
 					})
 				);
 				dispatch(clearCart());
+				setStatusCart(false);
 				history.push(`${pathConstant.dashboard}/order-info`);
 				document.body.classList.remove("overflow-y-hidden");
 			} else {
-				alert("You need to pay this order or change method to pay this order!");
+				alert("You need to pay this order or change method to create order!");
 			}
 		} else {
 			dispatch(
@@ -78,6 +81,7 @@ export default function MakePayment({ price, voucherPrice }) {
 				})
 			);
 			dispatch(clearCart());
+			setStatusCart(false);
 			history.push(`${pathConstant.dashboard}/order-info`);
 			document.body.classList.remove("overflow-y-hidden");
 		}

@@ -10,14 +10,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import Loading from "components/Loading";
+import ScrollToTop from "components/ScrollToTop";
 ReactDOM.render(
 	<Provider store={store}>
 		<Router>
-			<Suspense fallback={<Loading />}>
-				<React.StrictMode>
-					<App />
-				</React.StrictMode>
-			</Suspense>
+			<ScrollToTop>
+				<Suspense fallback={<Loading />}>
+					<React.StrictMode>
+						<App />
+					</React.StrictMode>
+				</Suspense>
+			</ScrollToTop>
 		</Router>
 	</Provider>,
 	document.getElementById("root")

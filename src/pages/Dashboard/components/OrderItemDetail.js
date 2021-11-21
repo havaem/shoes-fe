@@ -1,3 +1,4 @@
+import { convertTimestampToDate } from "utils";
 import ProductOrderItem from "./ProductOrderItem";
 export default function OrderItemDetail({ order }) {
 	return (
@@ -13,10 +14,10 @@ export default function OrderItemDetail({ order }) {
 						<h5 className="text-[#9098b1]">Address</h5>
 						<p>{order.info.address}</p>
 					</li>
-					{/* <li className="flex justify-between">
-						<h5 className="text-[#9098b1]">Last action</h5>
-						<p>30/04/1975 12:00PM</p>
-					</li> */}
+					<li className="flex justify-between">
+						<h5 className="text-[#9098b1]">Updated</h5>
+						<p>{convertTimestampToDate(order.updatedAt)}</p>
+					</li>
 					<li className="flex justify-between">
 						<h5 className="text-[#9098b1]">Methods of payment</h5>
 						<p className="text-blue40 font-bold">
@@ -29,7 +30,7 @@ export default function OrderItemDetail({ order }) {
 				<h3 className="text-[#223263] text-md mb-3 font-medium">Product</h3>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-1">
 					{order.cart.map((e) => (
-						<ProductOrderItem item={e} />
+						<ProductOrderItem key={e._id} item={e} />
 					))}
 				</div>
 			</div>

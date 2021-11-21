@@ -71,3 +71,11 @@ export const updateUser = createAsyncThunk("user/updateUser", async (data, { rej
 		return rejectWithValue(error.response.data);
 	}
 });
+export const deleteUser = createAsyncThunk("user/deleteUser", async (data, { rejectWithValue }) => {
+	try {
+		const response = await userApi.deleteUser(data);
+		return response;
+	} catch (error) {
+		return rejectWithValue(error.response.data);
+	}
+});

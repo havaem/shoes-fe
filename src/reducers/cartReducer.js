@@ -9,7 +9,7 @@ export const cartSlice = createSlice({
 		coupon: null,
 	},
 	reducers: {
-		clearCart:(state) => {
+		clearCart: (state) => {
 			state.cart = [];
 			state.amount = 0;
 			state.total = 0;
@@ -47,8 +47,16 @@ export const cartSlice = createSlice({
 					state.cart[index].amount += 5 - state.amount;
 				}
 			} else {
-				action.payload.amount = 5 - state.amount;
-				state.cart.push(action.payload);
+				if (action.payload.amount <= 5) {
+					state.cart.push(action.payload);
+				} else {
+					state.cart.push({
+						...action.payload,
+						amount: 5 - state.amount,
+					});
+				}
+				// action.payload.amount = 5 - state.amount;
+				// state.cart.push(action.payload);
 			}
 			state.total += action.payload.total;
 			state.amount = state.cart.reduce((acc, item) => {

@@ -57,6 +57,15 @@ const userApi = {
 			},
 		});
 	},
+	deleteUser: (id) => {
+		const token = localStorage.getItem("token");
+		const url = `${baseURL}/admin/${id}`;
+		return axiosClient.delete(url, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+	},
 	/*getInfoUser: (data) => {
 		const url = `${baseURL}/info`;
 		return axiosClient.get(url, {

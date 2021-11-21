@@ -7,6 +7,7 @@ import { setCartFromLocalStorage } from "reducers/cartReducer";
 import { errorNoti } from "reducers/notiReducer";
 import { renderRoute } from "utils";
 import Toast from "components/Toast";
+import { Switch } from "react-router";
 function App() {
 	const dispatch = useDispatch();
 	const [canRender, setCanRender] = useState(false);
@@ -28,13 +29,13 @@ function App() {
 		getCurrentUser();
 	}, [dispatch]);
 	return (
-		<>
-			<PublicLayout>
-				<Toast />
+		<PublicLayout>
+			<Toast />
+			<Switch>
 				{canRender && renderRoute(routes)}
 				{/* <Route path="/paypal" component={Paypal} /> */}
-			</PublicLayout>
-		</>
+			</Switch>
+		</PublicLayout>
 	);
 }
 

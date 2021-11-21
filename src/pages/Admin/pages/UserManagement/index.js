@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllUsers } from "reducers/asyncThunk/userAsyncThunk";
+import { deleteUser, getAllUsers } from "reducers/asyncThunk/userAsyncThunk";
+import { errorNoti, successNoti } from "reducers/notiReducer";
 import ItemTable from "./components/ItemTable";
 
 export default function UserManagement() {
@@ -16,7 +17,15 @@ export default function UserManagement() {
 			console.log(error);
 		}
 	}, [dispatch]);
-
+	const handleDelete = async (id) => {
+		try {
+			const response = await dispatch(deleteUser(id)).unwrap();
+			dispatch(successNoti({ message: response.message }));
+		} catch (error) {
+			dispatch(errorNoti({ message: error.message }));
+			console.log(error);
+		}
+	};
 	useEffect(() => {
 		let dataFilter;
 		dataFilter = data.filter((e) => e.email.toLowerCase().includes(filter.toLowerCase()));
@@ -54,7 +63,7 @@ export default function UserManagement() {
 					</thead>
 					<tbody>
 						{users.map((user) => (
-							<ItemTable key={user._id} user={user} />
+							<ItemTable key={user._id} user={user} handleDelete={handleDelete} />
 						))}
 					</tbody>
 				</table>

@@ -1,27 +1,36 @@
+import { pathConstant } from "constant/pathConstant";
 import { CartContext } from "contexts/CartContext";
 import { useContext, useEffect, useState } from "react";
 import { CloseOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { getVoucher } from "reducers/asyncThunk/voucherAsyncThunk";
 import { addVoucher, removeVoucher } from "reducers/cartReducer";
-import { errorNoti, successNoti } from "reducers/notiReducer";
+import { errorNoti, successNoti, warningNoti } from "reducers/notiReducer";
 import ItemCart from "./components/ItemCart";
 import MakePayment from "./components/MakePayment";
 
 const Cart = () => {
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const { statusCart, setStatusCart } = useContext(CartContext);
 	const cart = useSelector((state) => state.cart);
 	const [total, setTotal] = useState(0);
 	const [voucher, setVoucher] = useState("");
 	const [voucherPrice, setVoucherPrice] = useState(0);
+	const user = useSelector((state) => state.user.user.email);
 	const handleClick = () => {
-		if (!statusCart) {
-			setStatusCart(true);
-			document.body.classList.add("overflow-y-hidden");
+		if (user) {
+			if (!statusCart) {
+				setStatusCart(true);
+				document.body.classList.add("overflow-y-hidden");
+			} else {
+				setStatusCart(false);
+				document.body.classList.remove("overflow-y-hidden");
+			}
 		} else {
-			setStatusCart(false);
-			document.body.classList.remove("overflow-y-hidden");
+			dispatch(warningNoti({ message: "You need to login to checkout!" }));
+			history.push(`${pathConstant.login}`);
 		}
 	};
 	const handleRedeemVoucher = async () => {

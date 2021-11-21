@@ -1,16 +1,13 @@
+import { DEFAULT_PASSWORD } from "constant";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "reducers/asyncThunk/userAsyncThunk";
 import { errorNoti, successNoti } from "reducers/notiReducer";
 import { uploadImage } from "utils";
 
-export default function ItemTable({ user }) {
+export default function ItemTable({ user, handleDelete }) {
 	const dispatch = useDispatch();
-	const [info, setInfo] = useState({
-		role: user.role,
-		picture: user.picture,
-		name: user.name,
-	});
+	const [info, setInfo] = useState({ role: user.role, picture: user.picture, name: user.name });
 	const [showInputName, setShowInputName] = useState(false);
 	const [inputFile, setInputFile] = useState(null);
 	const handleSave = async () => {
@@ -21,9 +18,9 @@ export default function ItemTable({ user }) {
 					updateUser({
 						id: user._id,
 						data: {
-							role: user.role,
+							role: info.role,
 							picture: imgURL,
-							name: user.name,
+							name: info.name,
 						},
 					})
 				).unwrap();
@@ -33,14 +30,31 @@ export default function ItemTable({ user }) {
 					updateUser({
 						id: user._id,
 						data: {
-							role: user.role,
-							picture: user.picture,
-							name: user.name,
+							role: info.role,
+							picture: info.picture,
+							name: info.name,
 						},
 					})
 				).unwrap();
 				dispatch(successNoti({ message: response.message }));
 			}
+		} catch (error) {
+			dispatch(errorNoti({ message: error.message }));
+			console.log(error);
+		}
+	};
+	const handleResetPassword = async () => {
+		try {
+			const response = await dispatch(
+				updateUser({
+					id: user._id,
+					data: {
+						password: DEFAULT_PASSWORD,
+					},
+				})
+			).unwrap();
+			dispatch(successNoti({ message: `Password: ${DEFAULT_PASSWORD}` }));
+			dispatch(successNoti({ message: response.message }));
 		} catch (error) {
 			dispatch(errorNoti({ message: error.message }));
 			console.log(error);
@@ -54,11 +68,14 @@ export default function ItemTable({ user }) {
 					name="role"
 					checked={info.role === 0}
 					onChange={(e) => {
-						setInfo({ ...info, role: e.target.checked ? 0 : 1 });
+						setInfo({
+							...info,
+							role: e.target.checked ? 0 : 1,
+						});
 					}}
 				/>
 			</td>
-			<td className="sticky left-0 px-2 py-2 text-center bg-white">
+			<td className="px-2 py-2 text-center bg-white">
 				<label htmlFor="avt" title="Change avatar">
 					<img
 						src={info.picture}
@@ -72,19 +89,25 @@ export default function ItemTable({ user }) {
 					accept="image/*"
 					className="hidden w-full h-full"
 					onChange={(e) => {
-						setInfo({ ...info, picture: URL.createObjectURL(e.target.files[0]) });
+						setInfo({
+							...info,
+							picture: URL.createObjectURL(e.target.files[0]),
+						});
 						setInputFile(e.target.files[0]);
 					}}
 				/>
 			</td>
-			<td className="left-[70px] sticky px-2 py-2 bg-white">
+			<td className="left-[0px] sticky px-2 py-2 bg-white">
 				{showInputName ? (
 					<input
 						type="text"
 						className="w-full"
 						value={info.name}
 						onChange={(e) => {
-							setInfo({ ...info, name: e.target.value });
+							setInfo({
+								...info,
+								name: e.target.value,
+							});
 						}}
 						onBlur={() => {
 							setShowInputName(false);
@@ -111,8 +134,20 @@ export default function ItemTable({ user }) {
 				<button className="px-2 py-1 text-white bg-green-500 rounded-md" onClick={handleSave}>
 					Save
 				</button>
-				<button className="ml-2 px-2 py-1 text-white bg-yellow-500 rounded-md">Reset Password</button>
-				<button className="ml-2 px-2 py-1 text-white bg-red-500 rounded-md">Delete</button>
+				<button
+					className="ml-2 px-2 py-1 text-white bg-yellow-500 rounded-md"
+					onClick={handleResetPassword}
+				>
+					Reset Password
+				</button>
+				<button
+					className="ml-2 px-2 py-1 text-white bg-red-500 rounded-md"
+					onClick={() => {
+						handleDelete(user._id);
+					}}
+				>
+					Delete
+				</button>
 			</td>
 		</tr>
 	);
