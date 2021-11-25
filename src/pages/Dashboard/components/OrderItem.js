@@ -9,7 +9,7 @@ export default function OrderItem({ order, handleCancelOrder }) {
 			case 1:
 				return <p className="text-green-500 font-bold">Confirming</p>;
 			case 2:
-				return <p className="text-yellow-500 font-bold">Confirming</p>;
+				return <p className="text-yellow-500 font-bold">Confirmed</p>;
 			case 3:
 				return <p className="text-blue-500 font-bold">Completed</p>;
 			case 4:

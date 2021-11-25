@@ -34,24 +34,7 @@ const BoxFilter = ({ title, options, className = "" }) => (
 		))}
 	</ul>
 );
-const BoxFilterRight = ({ title, options }) => (
-	<div className="sm:w-1/2">
-		<label htmlFor="sort" className="mr-2 dark:text-whitee2 sm:mb-2">
-			{title}
-		</label>
-		<select
-			name="sort"
-			id="sort"
-			className="border-[#F1F3F4] px-4 h-10 dark:text-whitee2 dark:bg-black1f border-0 rounded-sm outline-none sm:px-2 sm:w-full"
-		>
-			{options.map((e, i) => (
-				<option key={i} value={e.value}>
-					{e.label}
-				</option>
-			))}
-		</select>
-	</div>
-);
+
 const Filter = () => {
 	const dispatch = useDispatch();
 	const [viewOption, setViewOption] = useState(1);
@@ -90,31 +73,125 @@ const Filter = () => {
 	const optionFilterRating = [
 		{
 			label: "All",
-			value: 0,
-		},
-		{
-			label: "1 ⭐",
 			value: 1,
 		},
 		{
-			label: "2 ⭐",
+			label: "1 ⭐",
 			value: 2,
 		},
 		{
-			label: "3 ⭐",
+			label: "2 ⭐",
 			value: 3,
 		},
 		{
-			label: "4 ⭐",
+			label: "3 ⭐",
 			value: 4,
 		},
 		{
-			label: "5 ⭐",
+			label: "4 ⭐",
 			value: 5,
+		},
+		{
+			label: "5 ⭐",
+			value: 6,
 		},
 	];
 	const products = useSelector((state) => state.product.products);
 	const userWhiteList = useSelector((state) => state.user.user.whitelist);
+	const [productShow, setProductShow] = useState();
+	const [sortBy, setSortBy] = useState(1);
+	const [rating, setRating] = useState(1);
+	const BoxFilterRight = ({ title, options }) => (
+		<div className="sm:w-1/2">
+			<label htmlFor={title} className="mr-2 dark:text-whitee2 sm:mb-2">
+				{title}
+			</label>
+			<select
+				name={title}
+				id={title}
+				className="border-[#F1F3F4] px-4 h-10 dark:text-whitee2 dark:bg-black1f border-0 rounded-sm outline-none sm:px-2 sm:w-full"
+				onChange={(e) => {
+					if (title === "Sort By") {
+						setSortBy(+e.target.value);
+					} else {
+						setRating(+e.target.value);
+					}
+				}}
+				value={title === "Sort By" ? sortBy.toString() : rating.toString()}
+			>
+				{options.map((e, i) => (
+					<option key={i} value={e.value}>
+						{e.label}
+					</option>
+				))}
+			</select>
+		</div>
+	);
+	useEffect(() => {
+		if (products.length > 0) {
+			let tmp = [...products];
+			if (sortBy === 1) {
+				tmp.sort(function (a, b) {
+					if (a.name < b.name) {
+						return -1;
+					}
+					if (a.name > b.name) {
+						return 1;
+					}
+					return 0;
+				});
+			}
+			if (sortBy === 2) {
+				tmp.sort(function (a, b) {
+					if (a.name < b.name) {
+						return 1;
+					}
+					if (a.name > b.name) {
+						return -1;
+					}
+					return 0;
+				});
+			}
+			if (sortBy === 4) {
+				tmp.sort(function (a, b) {
+					if (a.price.discount < b.price.discount) {
+						return 1;
+					}
+					if (a.price.discount > b.price.discount) {
+						return -1;
+					}
+					return 0;
+				});
+			}
+			if (sortBy === 3) {
+				tmp.sort(function (a, b) {
+					if (a.price.discount > b.price.discount) {
+						return 1;
+					}
+					if (a.price.discount < b.price.discount) {
+						return -1;
+					}
+					return 0;
+				});
+			}
+			if (rating === 2) {
+				tmp = tmp.filter((e) => Math.floor(e.rating.averageRating) === 1);
+			}
+			if (rating === 3) {
+				tmp = tmp.filter((e) => Math.floor(e.rating.averageRating) === 2);
+			}
+			if (rating === 4) {
+				tmp = tmp.filter((e) => Math.floor(e.rating.averageRating) === 3);
+			}
+			if (rating === 5) {
+				tmp = tmp.filter((e) => Math.floor(e.rating.averageRating) === 4);
+			}
+			if (rating === 6) {
+				tmp = tmp.filter((e) => Math.floor(e.rating.averageRating) === 5);
+			}
+			setProductShow(tmp);
+		}
+	}, [products, rating, sortBy]);
 	useEffect(() => {
 		dispatch(getAllProduct());
 	}, [dispatch]);
@@ -122,7 +199,7 @@ const Filter = () => {
 		<section>
 			<div className="max-w-[1300px] gap-x-[30px] flex mb-16 mx-auto md:mb-8 lg:flex-col lg:gap-y-5">
 				{/* Left */}
-				<div className="max-w-[270px] gap-y-[30px] flex flex-col w-full md:hidden lg:flex-row lg:gap-x-3 lg:max-w-none">
+				<div className="max-w-[270px] gap-y-[30px] flex hidden flex-col w-full md:hidden lg:flex-row lg:gap-x-3 lg:max-w-none">
 					<BoxFilter title="Brand" options={optionProductBrand} className="lg:w-1/3" />
 					<div className="bg-[#f6f7f8] p-5 dark:bg-gray24 rounded-md lg:w-1/3">
 						<p className="text-[#22262A] leading-[27px] mb-5 dark:text-whitee2 text-lg font-medium uppercase">
@@ -167,8 +244,8 @@ const Filter = () => {
 								: "gap-[30px] grid grid-cols-1 mb-6"
 						}`}
 					>
-						{products &&
-							products.map((e, i) => (
+						{productShow &&
+							productShow.map((e, i) => (
 								<ProductItem
 									whitelist={userWhiteList.indexOf(e._id) !== -1}
 									id={e._id}
@@ -196,10 +273,10 @@ const Filter = () => {
 							<ChevronBack color={"#00000"} />
 						</button>
 						<PaginationButton title="1" active />
-						<PaginationButton title="2" />
-						<PaginationButton title="3" />
-						<PaginationButton title="4" />
-						<PaginationButton title="5" />
+						{/* <PaginationButton title="2" /> */}
+						{/* <PaginationButton title="3" /> */}
+						{/* <PaginationButton title="4" /> */}
+						{/* <PaginationButton title="5" /> */}
 						<button className="flex items-center justify-center w-14 text-lg">
 							<ChevronForward color={"#00000"} />
 						</button>

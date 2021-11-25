@@ -69,6 +69,7 @@ export default function ProductComment({ login, userRating, id, dispatch, produc
 							content={e.content}
 							rating={e.user.rating}
 							date={e.createdAt}
+							product={product}
 						/>
 					))}
 			</div>

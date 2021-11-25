@@ -1,7 +1,7 @@
 import { lazy } from "react";
 const { pathConstant } = require("constant/pathConstant");
-
 const Admin = lazy(() => import("pages/Admin"));
+const Reset = lazy(() => import("pages/Reset"));
 const Dashboard = lazy(() => import("pages/Dashboard"));
 const Home = lazy(() => import("pages/Home"));
 const ProductList = lazy(() => import("pages/ProductList"));
@@ -9,6 +9,7 @@ const ProductInfo = lazy(() => import("pages/ProductInfo"));
 const Cart = lazy(() => import("pages/Cart"));
 const Login = lazy(() => import("pages/Login"));
 const Register = lazy(() => import("pages/Register"));
+const Forgot = lazy(() => import("pages/Forgot"));
 
 export const routes = [
 	{
@@ -52,5 +53,16 @@ export const routes = [
 		path: pathConstant.admin,
 		component: Admin,
 		private: true,
+		admin: true,
+	},
+	{
+		exact: false,
+		path: pathConstant.forgot,
+		component: Forgot,
+	},
+	{
+		exact: false,
+		path: `${pathConstant.reset}/:token`,
+		component: Reset,
 	},
 ];

@@ -10,3 +10,12 @@ export function PrivateRoute({ component: Component, ...rest }) {
 		/>
 	);
 }
+export function AdminRoute({ component: Component, ...rest }) {
+	const userRole = useSelector((state) => state.user.user.role);
+	return (
+		<Route
+			{...rest}
+			render={(props) => (userRole === 0 ? <Component {...props} /> : <Redirect to="/" />)}
+		/>
+	);
+}

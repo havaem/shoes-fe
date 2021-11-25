@@ -5,6 +5,14 @@ const userApi = {
 		const url = `${baseURL}/register`;
 		return axiosClient.post(url, data);
 	},
+	forgot: (data) => {
+		const url = `${baseURL}/${data}`;
+		return axiosClient.post(url);
+	},
+	changeforgot: (data) => {
+		const url = `${baseURL}`;
+		return axiosClient.post(url,data);
+	},
 	login: (data) => {
 		const url = `${baseURL}/login`;
 		return axiosClient.post(url, data);
@@ -12,6 +20,15 @@ const userApi = {
 	loginGoogle: (data) => {
 		const url = `${baseURL}/loginGoogle`;
 		return axiosClient.post(url, data);
+	},
+	updateAvatar: (data) => {
+		const token = localStorage.getItem("token");
+		const url = `${baseURL}/avatar`;
+		return axiosClient.post(url, data, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 	},
 	currentUser: (data) => {
 		const url = `${baseURL}/`;

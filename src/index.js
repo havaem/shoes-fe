@@ -16,9 +16,7 @@ ReactDOM.render(
 		<Router>
 			<ScrollToTop>
 				<Suspense fallback={<Loading />}>
-					<React.StrictMode>
-						<App />
-					</React.StrictMode>
+					<App />
 				</Suspense>
 			</ScrollToTop>
 		</Router>

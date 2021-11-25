@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { createOneRepComment, getAllReplyComment } from "reducers/asyncThunk/commentAsyncThunk";
 import { errorNoti, successNoti } from "reducers/notiReducer";
 import { convertTimestampToDate } from "utils";
-export default function ProductCommentItem({ id, picture, name, date, content, rating, email, login }) {
+export default function ProductCommentItem({ id,product, picture, name, date, content, rating, email, login }) {
 	const dispatch = useDispatch();
 	const [replyComment, setReplyComment] = useState(false);
 	const [comment, setComment] = useState("");
@@ -45,7 +45,7 @@ export default function ProductCommentItem({ id, picture, name, date, content, r
 			}
 		};
 		return getAllReply();
-	}, [dispatch, id]);
+	}, [dispatch, id, product]);
 	return (
 		<div className="flex gap-4 mt-4">
 			{/* Avatar */}

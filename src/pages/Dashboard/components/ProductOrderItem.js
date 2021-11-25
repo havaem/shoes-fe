@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { getOneProduct } from "reducers/asyncThunk/productAsyncThunk";
 
 export default function ProductOrderItem({ item }) {
+	console.log(item);
 	const dispatch = useDispatch();
 	const [product, setProduct] = useState(null);
 	useEffect(() => {
@@ -24,7 +25,7 @@ export default function ProductOrderItem({ item }) {
 				</div>
 				<div className="flex flex-col justify-between">
 					<a href="/" className="text-[#223263] font-bold">
-						{product.name}
+						{product.name}-{item.color}-{item.size}
 					</a>
 					<p className="text-blue40 font-bold">
 						${item.price} - {item.quantity}

@@ -15,6 +15,7 @@ export const userSlice = createSlice({
 			email: "",
 			picture: "",
 			whitelist: [],
+			role: 1,
 		},
 		loading: false,
 	},
@@ -25,6 +26,7 @@ export const userSlice = createSlice({
 				email: "",
 				picture: "",
 				whitelist: "",
+				role: 1,
 			};
 			localStorage.removeItem("token");
 		},
@@ -38,11 +40,12 @@ export const userSlice = createSlice({
 		},
 		[registerUser.fulfilled]: (state, { payload }) => {
 			const { user, token } = payload;
-			const { name, email, picture, whitelist } = user;
+			const { name, email, picture, whitelist, role } = user;
 			state.user.name = name;
 			state.user.email = email;
 			state.user.picture = picture;
 			state.user.whitelist = whitelist;
+			state.user.role = role;
 			localStorage.setItem("token", token);
 			state.loading = false;
 		},
@@ -54,11 +57,13 @@ export const userSlice = createSlice({
 		},
 		[loginUser.fulfilled]: (state, { payload }) => {
 			const { user, token } = payload;
-			const { name, email, picture, whitelist } = user;
+			const { name, email, picture, whitelist, role } = user;
 			state.user.name = name;
 			state.user.email = email;
 			state.user.picture = picture;
 			state.user.whitelist = whitelist;
+			state.user.role = role;
+
 			localStorage.setItem("token", token);
 			state.loading = false;
 		},
@@ -70,11 +75,12 @@ export const userSlice = createSlice({
 		},
 		[loginGoogleUser.fulfilled]: (state, { payload }) => {
 			const { user, token } = payload;
-			const { name, email, picture, whitelist } = user;
+			const { name, email, picture, whitelist, role } = user;
 			state.user.name = name;
 			state.user.email = email;
 			state.user.picture = picture;
 			state.user.whitelist = whitelist;
+			state.user.role = role;
 			localStorage.setItem("token", token);
 			state.loading = false;
 		},
@@ -86,11 +92,12 @@ export const userSlice = createSlice({
 		},
 		[currentUser.fulfilled]: (state, { payload }) => {
 			const { user, token } = payload;
-			const { name, email, picture, whitelist } = user;
+			const { name, email, picture, whitelist, role } = user;
 			state.user.name = name;
 			state.user.email = email;
 			state.user.picture = picture;
 			state.user.whitelist = whitelist;
+			state.user.role = role;
 			localStorage.setItem("token", token);
 			state.loading = false;
 		},

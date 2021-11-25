@@ -30,13 +30,15 @@ export default function ItemTableVoucher({ voucher, handleDelete }) {
 					<input
 						type="number"
 						className="w-full"
-						min={0}
-						value={info.type}
+						min={1}
+						max={2}
+						defaultValue={info.type}
 						onChange={(e) => {
-							setInfo({
-								...info,
-								type: e.target.value,
-							});
+							(e.target.value === "1" || e.target.value === "2") &&
+								setInfo({
+									...info,
+									type: +e.target.value,
+								});
 						}}
 						onBlur={() => {
 							setShowInputType(false);

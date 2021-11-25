@@ -173,7 +173,7 @@ export default function MakePayment({ price, voucherPrice }) {
 							clientId: process.env.REACT_APP_PRODUCTION_CLIENT_ID,
 						}}
 						shippingPreference="NO_SHIPPING"
-						amount={price}
+						amount={price.toFixed(2)}
 						onSuccess={() => {
 							alert("Transaction completed");
 							setPaid(true);

@@ -25,3 +25,24 @@ export const cancelOrder = createAsyncThunk("order/cancelOrder", async (data, { 
 		return rejectWithValue(error.response.data);
 	}
 });
+
+// admin
+export const getAllOrdersByAdmin = createAsyncThunk(
+	"order/getAllOrdersByAdmin",
+	async (data, { rejectWithValue }) => {
+		try {
+			const response = await orderApi.getAllAdmin();
+			return response;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+export const updateOneOrder = createAsyncThunk("order/updateOneOrder", async (data, { rejectWithValue }) => {
+	try {
+		const response = await orderApi.updateOne(data);
+		return response;
+	} catch (error) {
+		return rejectWithValue(error.response.data);
+	}
+});

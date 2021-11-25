@@ -2,8 +2,8 @@ import Directory from "components/Directory";
 import Filter from "./components/Filter";
 const testValue = [
 	{ link: "/", title: "Home" },
-	{ link: "/", title: "Home" },
-	{ link: "/", title: "Home" },
+	{ link: "/", title: "Shoes" },
+	{ link: "/", title: "ListProduct" },
 ];
 const ProductList = () => {
 	return (

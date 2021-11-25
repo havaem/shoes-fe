@@ -1,3 +1,4 @@
+import React from "react";
 import { PersonOutline, CartOutline, MenuOutline } from "react-ionicons";
 import logo from "assets/icons/logo.png";
 import { MenuContext } from "contexts/MenuContext";
@@ -38,6 +39,7 @@ const BottomNavItem = ({ active = false, button, children, link = "/", className
 };
 const Header = () => {
 	const user = useSelector((state) => state.user.user.email);
+	const role = useSelector((state) => state.user.user.role);
 	const cart = useSelector((state) => state.cart.cart);
 	const { setStatusMenu } = useContext(MenuContext);
 	return (
@@ -53,13 +55,15 @@ const Header = () => {
 								<PersonOutline color={"#00000"} height="20px" width="20px" />
 								My profile
 							</TopNavItem>
-							<TopNavItem
-								className="flex gap-x-1 items-center"
-								link={`${pathConstant.admin}/manage-user/`}
-							>
-								<PersonOutline color={"#00000"} height="20px" width="20px" />
-								ADMIN PANEL
-							</TopNavItem>
+							{role === 0 && (
+								<TopNavItem
+									className="flex gap-x-1 items-center"
+									link={`${pathConstant.admin}/manage-user/`}
+								>
+									<PersonOutline color={"#00000"} height="20px" width="20px" />
+									ADMIN PANEL
+								</TopNavItem>
+							)}
 						</>
 					) : (
 						<>
@@ -110,4 +114,4 @@ const Header = () => {
 	);
 };
 
-export default Header;
+export default React.memo(Header);

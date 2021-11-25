@@ -96,9 +96,9 @@ const ProductInfo = () => {
 					id: id,
 					image: product.image[0],
 					name: product.name,
-					price: product.price.discount ? product.price.discount : product.price.basic,
-					total: product.price.discount
-						? product.price.discount
+					price: product.price.percent !== 0 ? product.price.discount : product.price.basic,
+					total: product.price.percent
+						? product.price.discount * userSelect.amount
 						: product.price.basic * userSelect.amount,
 					max: product.amount,
 				})
@@ -190,15 +190,15 @@ const ProductInfo = () => {
 							</div>
 							<div className="my-4">
 								<span className="mr-3 text-blue40 text-lg font-bold tracking-1/2 leading-9/5 sm:block sm:mr-0 sm:text-base">
-									${product.price.basic}
+									${product.price.discount}
 								</span>
-								{product.price.discount && (
+								{product.price.percent !== 0 && (
 									<>
 										<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
-											$534,33
+											${product.price.basic}
 										</span>
 										<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
-											24% Off
+											{product.price.percent}% Off
 										</span>
 									</>
 								)}

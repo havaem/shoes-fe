@@ -1,14 +1,17 @@
 import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 import storage from "apis/firebase";
-import { PrivateRoute } from "components/PrivateRoute";
+import { AdminRoute, PrivateRoute } from "components/PrivateRoute";
 import { Route } from "react-router";
-export const renderRoute = (routes, Layout) =>
+export const renderRoute = (routes) =>
 	routes.map((ele) => {
-		return ele.private ? (
-			<PrivateRoute key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />
-		) : (
-			<Route key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />
-		);
+		if (ele.admin) {
+			return <AdminRoute key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />;
+		}
+		if (ele.private)
+			return (
+				<PrivateRoute key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />
+			);
+		return <Route key={ele.path} path={ele.path} exact={ele.exact} component={ele.component} />;
 	});
 
 export const convertTimestampToDate = (timestamp) => {

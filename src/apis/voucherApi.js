@@ -18,8 +18,6 @@ const voucherApi = {
 		return axiosClient.delete(url);
 	},
 	update: ({ id, data }) => {
-		console.log(id);
-		console.log(data);
 		const url = `${baseURL}/${id}`;
 		return axiosClient.put(url, data);
 	},

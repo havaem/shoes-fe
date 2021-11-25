@@ -14,6 +14,7 @@ export const cartSlice = createSlice({
 			state.amount = 0;
 			state.total = 0;
 			state.coupon = null;
+			localStorage.removeItem("cart");
 		},
 		addVoucher: (state, action) => {
 			state.coupon = action.payload;

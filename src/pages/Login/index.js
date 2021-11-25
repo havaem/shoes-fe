@@ -1,4 +1,5 @@
 import icon from "assets/icons/icon.png";
+import { pathConstant } from "constant/pathConstant";
 import { ErrorMessage } from "pages/Cart/components/ErrorMessage";
 import GoogleLogin from "react-google-login";
 import { useForm } from "react-hook-form";
@@ -14,15 +15,7 @@ export default function Login() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm(
-		{
-			defaultValues: {
-				email: "vhnvohoainam@gmail.com",
-				password: "nAm0165378969",
-			},
-		},
-		{ mode: "all" }
-	);
+	} = useForm({ mode: "all" });
 	const onSubmit = async (data) => {
 		try {
 			await dispatch(loginUser(data)).unwrap();
@@ -110,12 +103,12 @@ export default function Login() {
 							}}
 						></GoogleLogout> */}
 					</div>
-					<Link to="/register" className="my-2 text-center text-blue33 font-bold">
+					<Link to={pathConstant.forgot} className="my-2 text-center text-blue33 font-bold">
 						Forgot Password
 					</Link>
 					<p className="mt-2 text-center dark:text-whitee2">
 						Don’t have a account?{" "}
-						<Link to="/register" className="text-blue33 font-bold">
+						<Link to={pathConstant.register} className="text-blue33 font-bold">
 							Register
 						</Link>
 					</p>

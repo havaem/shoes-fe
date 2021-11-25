@@ -7,4 +7,6 @@ export const pathConstant = {
 	register: "/register",
 	dashboard: "/dashboard",
 	admin: "/admin",
+	forgot: "/forgot-password",
+	reset: "/reset-password",
 };

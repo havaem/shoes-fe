@@ -1,9 +1,12 @@
-import { BanOutline, PersonOutline, ReceiptOutline } from "react-ionicons";
+import { BanOutline, CubeOutline, GiftOutline, PersonOutline, ReceiptOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Switch, useRouteMatch, Link } from "react-router-dom";
 import { logout } from "reducers/userReducer";
 import { renderRoute } from "utils";
+import OrderManagement from "./pages/OrderManagement";
+import ProductManagement from "./pages/ProductManagement";
+import ProductItem from "./pages/ProductManagement/components/ProductItem";
 import UserManagement from "./pages/UserManagement/";
 import VoucherManagement from "./pages/VoucherManagement";
 const adminRoutes = [
@@ -13,6 +16,15 @@ const adminRoutes = [
 		exact: true,
 		label: "User Management",
 		Icon: PersonOutline,
+		render: true,
+	},
+	{
+		path: "/admin/manage-order/",
+		component: OrderManagement,
+		exact: true,
+		label: "Order Management",
+		Icon: GiftOutline,
+		render: true,
 	},
 	{
 		path: "/admin/manage-voucher/",
@@ -20,6 +32,23 @@ const adminRoutes = [
 		exact: true,
 		label: "Voucher Management",
 		Icon: ReceiptOutline,
+		render: true,
+	},
+	{
+		path: "/admin/manage-product/",
+		component: ProductManagement,
+		exact: true,
+		label: "Product Management",
+		Icon: CubeOutline,
+		render: true,
+	},
+	{
+		path: "/admin/manage-product/:id",
+		component: ProductItem,
+		exact: true,
+		label: "Product Management",
+		Icon: ReceiptOutline,
+		render: false,
 	},
 ];
 
@@ -63,15 +92,18 @@ export default function Admin() {
 				</div>
 				<div className="flex gap-4 p-2 border-t-2 border-grayf1 lg:flex-col">
 					<ul className="max-w-[250px] flex flex-col gap-y-2 w-full dark:text-whitee2 border-r-2 border-grayf1 lg:max-w-none lg:border-b-2 lg:border-r-0">
-						{adminRoutes.map((e) => (
-							<LinkCustom
-								activeOnlyWhenExact={e.exact}
-								to={e.path}
-								label={e.label}
-								Icon={e.Icon}
-								key={e.path}
-							/>
-						))}
+						{adminRoutes.map(
+							(e) =>
+								e.render && (
+									<LinkCustom
+										activeOnlyWhenExact={e.exact}
+										to={e.path}
+										label={e.label}
+										Icon={e.Icon}
+										key={e.path}
+									/>
+								)
+						)}
 
 						<li className={`px-2 py-3`}>
 							<button className="flex gap-x-2 items-center" onClick={logOut}>

@@ -14,17 +14,7 @@ export default function Register() {
 		handleSubmit,
 		getValues,
 		formState: { errors },
-	} = useForm(
-		{
-			defaultValues: {
-				name: "Võ Hoài Nam",
-				email: "vhnvohoainam@gmail.com",
-				password: "nAm0165378969",
-				passwordConfirmation: "nAm0165378969",
-			},
-		},
-		{ mode: "all" }
-	);
+	} = useForm({ mode: "all" });
 	const onSubmit = async (data) => {
 		try {
 			delete data.passwordConfirmation;

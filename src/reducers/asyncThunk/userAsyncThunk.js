@@ -79,3 +79,37 @@ export const deleteUser = createAsyncThunk("user/deleteUser", async (data, { rej
 		return rejectWithValue(error.response.data);
 	}
 });
+export const updateAvatarUser = createAsyncThunk(
+	"user/updateAvatarUser",
+	async (data, { rejectWithValue }) => {
+		try {
+			const response = await userApi.updateAvatar(data);
+			return response;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+export const forgotPasswordUser = createAsyncThunk(
+	"user/forgotPasswordUser",
+	async (data, { rejectWithValue }) => {
+		try {
+			const response = await userApi.forgot(data);
+			return response;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+export const changeForgotPasswordUser = createAsyncThunk(
+	"user/changeForgotPasswordUser",
+	async (data, { rejectWithValue }) => {
+		try {
+			const response = await userApi.changeforgot(data);
+			return response;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	}
+);

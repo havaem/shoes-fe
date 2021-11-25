@@ -16,6 +16,12 @@ export default function ColorButton({ color, active, changeData }) {
 			case "blue":
 				setColorCode("bg-[#006cff]");
 				break;
+			case "green":
+				setColorCode("bg-green-500");
+				break;
+			case "pink":
+				setColorCode("bg-[#ff00b4]");
+				break;
 			default:
 				break;
 		}

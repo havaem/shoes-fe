@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { BagHandleOutline, BanOutline, KeyOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Switch, useRouteMatch, Link } from "react-router-dom";
+import { updateAvatarUser, updateUser } from "reducers/asyncThunk/userAsyncThunk";
+import { clearCart } from "reducers/cartReducer";
+import { errorNoti, successNoti } from "reducers/notiReducer";
 import { logout } from "reducers/userReducer";
-import { renderRoute } from "utils";
+import { renderRoute, uploadImage } from "utils";
 import ChangePassword from "./components/ChangePassword";
 import OrderInfo from "./components/OrderInfo";
 const dashboardRoute = [
@@ -31,8 +35,10 @@ export default function Dashboard() {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.user);
 	const { name, picture, email } = user;
+	const [pictureUser, setPictureUser] = useState(picture);
 	const logOut = () => {
 		dispatch(logout());
+		dispatch(clearCart());
 		history.push("/");
 	};
 	return (
@@ -41,7 +47,30 @@ export default function Dashboard() {
 				<div className="py-3">
 					<div className="flex items-center justify-center">
 						<div className="mr-3 w-20 h-20 rounded-full overflow-hidden">
-							<img src={picture} alt="" className="w-20 h-20 rounded-full object-cover" />
+							<label htmlFor="avatar" className="cursor-pointer">
+								<img
+									src={pictureUser}
+									alt=""
+									className="w-20 h-20 rounded-full object-cover"
+								/>
+							</label>
+							<input
+								type="file"
+								id="avatar"
+								name="avatar"
+								accept="image/*"
+								className="hidden w-full h-full"
+								onChange={async (e) => {
+									const url = await uploadImage("avatar", e.target.files[0]);
+									try {
+										const response = await dispatch(updateAvatarUser({ picture: url }));
+										setPictureUser(url);
+										dispatch(successNoti({ message: response.message }));
+									} catch (error) {
+										dispatch(errorNoti({ message: error.message }));
+									}
+								}}
+							/>
 						</div>
 						<div>
 							<p className="dark:text-whitee2 text-xl font-medium">{name}</p>

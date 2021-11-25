@@ -88,12 +88,12 @@ const ProductItem = ({
 							detail ? "mr-2" : " sm:block sm:mr-0"
 						}`}
 					>
-						${price.basic}
+						${price.discount}
 					</span>
-					{price.percent && (
+					{price.percent !== 0 && (
 						<>
 							<span className="mr-2 text-gray90 line-through text-sm tracking-1/2 leading-3/2 sm:text-xs">
-								${price.discount}
+								${price.basic}
 							</span>
 							<span className="text-redfb text-sm font-bold tracking-1/2 leading-3/2 sm:text-xs">
 								{price.percent}% Off
