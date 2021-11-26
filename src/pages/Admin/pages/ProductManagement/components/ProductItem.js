@@ -45,7 +45,7 @@ export default function ProductItem() {
 					amount: product.amount,
 				},
 			}); */
-			const response = await dispatch(
+			await dispatch(
 				updateProduct({
 					id: id,
 					data: {

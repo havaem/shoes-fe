@@ -1,4 +1,4 @@
-import ProductItem from "components/ProductItem";
+// import ProductItem from "components/ProductItem";
 const TabItem = ({ children, active = false, ...more }) => (
 	<li
 		{...more}

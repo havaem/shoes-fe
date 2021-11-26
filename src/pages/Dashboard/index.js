@@ -3,7 +3,7 @@ import { BagHandleOutline, BanOutline, KeyOutline } from "react-ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Switch, useRouteMatch, Link } from "react-router-dom";
-import { updateAvatarUser, updateUser } from "reducers/asyncThunk/userAsyncThunk";
+import { updateAvatarUser } from "reducers/asyncThunk/userAsyncThunk";
 import { clearCart } from "reducers/cartReducer";
 import { errorNoti, successNoti } from "reducers/notiReducer";
 import { logout } from "reducers/userReducer";
