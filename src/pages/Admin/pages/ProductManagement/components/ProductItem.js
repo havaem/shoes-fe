@@ -53,7 +53,7 @@ export default function ProductItem() {
 						price: {
 							basic: product.price.basic,
 							percent: product.price.percent,
-							discount: (product.price.discount * (100 - product.price.percent)) / 100,
+							discount: (product.price.basic * (100 - product.price.percent)) / 100,
 						},
 						color: product.color,
 						size: product.size,
