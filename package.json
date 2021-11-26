@@ -2,7 +2,7 @@
 	"name": "client",
 	"version": "0.1.0",
 	"private": true,
-	"proxy": "http://localhost:5000",
+	"proxy": "https://server-south.herokuapp.com",
 	"dependencies": {
 		"@craco/craco": "^6.4.0",
 		"@reduxjs/toolkit": "^1.6.2",
