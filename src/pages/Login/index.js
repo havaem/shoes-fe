@@ -78,7 +78,7 @@ export default function Login() {
 					<div className="mt-2 mx-auto">
 						<GoogleLogin
 							className="btn-google-login"
-							clientId="832510266743-jbd97cm287fcr21v7ctu2rl5afit92s0.apps.googleusercontent.com"
+							clientId="832510266743-v469bqpv21d13r1vdvhp6dqr1ntuuk8k.apps.googleusercontent.com"
 							render={(renderProps) => (
 								<button
 									className="p-2 text-blue-500 dark:bg-whitee2 border border-black12 rounded-md"
