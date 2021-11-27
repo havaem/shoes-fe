@@ -24,9 +24,9 @@ const Home = () => {
 	return (
 		<>
 			<Slide settings={slideSettings} items={slideItems} className="max-h-[650px] md:mt-[70px]" />
-			<BestSeller />
-			<Banner />
+			{/* <BestSeller /> */}
 			<Policy />
+			<Banner />
 		</>
 	);
 };
