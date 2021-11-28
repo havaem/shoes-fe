@@ -1,5 +1,5 @@
 import Slide from "components/Slide";
-import BestSeller from "./components/BestSeller";
+// import BestSeller from "./components/BestSeller";
 import Banner from "./components/Banner";
 import Policy from "./components/Policy";
 import banner from "assets/images/banner.png";
